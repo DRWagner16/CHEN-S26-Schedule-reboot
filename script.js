@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('[FATAL] Error loading schedule data:', error));
     }
     
+    // --- MODIFIED --- This function now handles multiple locations
     function populateFilters(courses) {
         const uniqueCourses = [...new Set(courses.map(course => course.course_number))].sort();
         uniqueCourses.forEach(courseName => {
@@ -103,7 +104,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        const uniqueLocations = [...new Set(courses.map(course => course.location))].sort();
+        // This logic is now identical to how instructors are handled
+        const allLocationNames = courses.flatMap(course => (course.location || '').split(';').map(name => name.trim()));
+        const uniqueLocations = [...new Set(allLocationNames)].sort();
         uniqueLocations.forEach(locationName => {
             if (locationName && locationName.toLowerCase() !== 'nan') {
                 const option = document.createElement('option');
@@ -129,6 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- MODIFIED --- This function now handles multiple locations
     function filterAndRedrawCalendar() {
         document.querySelectorAll('.class-event').forEach(event => event.remove());
 
@@ -138,9 +142,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const selectedCourses = Array.from(document.querySelectorAll('#course-checkboxes input:checked')).map(cb => cb.value);
 
         const filteredCourses = allCourses.filter(course => {
-            const instructorMatch = (selectedInstructor === 'all' || course.instructors.includes(selectedInstructor));
+            const instructorMatch = (selectedInstructor === 'all' || (course.instructors && course.instructors.includes(selectedInstructor)));
             const typeMatch = (selectedType === 'all' || course.type === selectedType);
-            const locationMatch = (selectedLocation === 'all' || course.location === selectedLocation);
+            const locationMatch = (selectedLocation === 'all' || (course.location && course.location.includes(selectedLocation)));
             const courseMatch = (selectedCourses.length === 0 || selectedCourses.includes(course.course_number));
             return instructorMatch && typeMatch && courseMatch && locationMatch;
         });
@@ -178,41 +182,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MODIFIED --- This function is completely new to handle your specific metric requests
+    // --- MODIFIED --- This function now handles multiple locations
     function calculateAndDisplayMetrics(courses) {
-        // --- Metric 1: MEB Room Usage ---
         const mebRooms = ["MEB 1292", "MEB 2550", "MEB 3520"];
         let mebUsageMinutes = 0;
 
-        // --- Metric 2 & 3: CH EN Prime Time ---
-        const primeTimeStart = 9 * 60; // 9:00 AM in minutes
-        const primeTimeEnd = 14 * 60; // 2:00 PM in minutes
+        const primeTimeStart = 9 * 60;
+        const primeTimeEnd = 14 * 60;
         let chenCoursesInPrimeTime = 0;
         let totalChenCourses = 0;
         let chenTimeInPrimeTimeMinutes = 0;
         let totalChenTimeMinutes = 0;
 
-        // --- Metric 4: CH EN Daily/Weekly Summary ---
         let totalWeeklyChenMinutes = 0;
         const dailyChenMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
 
-        // --- Loop through all filtered courses to calculate metrics ---
         courses.forEach(course => {
-            if (!course.duration || !course.days) return; // Skip courses with no duration or days
+            if (!course.duration || !course.days) return;
 
             const weeklyDuration = course.duration * course.days.length;
 
-            // Calculate MEB usage
-            if (mebRooms.includes(course.location)) {
+            // Check MEB usage across multiple possible locations
+            const courseLocations = (course.location || '').split(';').map(l => l.trim());
+            if (courseLocations.some(loc => mebRooms.includes(loc))) {
                 mebUsageMinutes += weeklyDuration;
             }
 
-            // Check if it's a CH EN course for the other metrics
             if (course.course_number.startsWith("CH EN")) {
                 totalChenCourses++;
                 totalChenTimeMinutes += weeklyDuration;
 
-                // Calculate CH EN Weekly Summary
                 totalWeeklyChenMinutes += weeklyDuration;
                 for (const dayChar of course.days) {
                     const dayCode = dayMap[dayChar];
@@ -221,7 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
 
-                // Check for Prime Time
                 if (course.startMinutes >= primeTimeStart && course.startMinutes < primeTimeEnd) {
                     chenCoursesInPrimeTime++;
                     chenTimeInPrimeTimeMinutes += weeklyDuration;
@@ -229,18 +227,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // --- Final Calculations & Display ---
-        
-        // Display MEB Usage
         document.getElementById('metric-meb-usage').textContent = (mebUsageMinutes / 60).toFixed(1);
 
-        // Display CH EN Prime Time Metrics
         const primeCoursePercentage = (totalChenCourses > 0) ? (chenCoursesInPrimeTime / totalChenCourses) * 100 : 0;
         const primeTimePercentage = (totalChenTimeMinutes > 0) ? (chenTimeInPrimeTimeMinutes / totalChenTimeMinutes) * 100 : 0;
         document.getElementById('metric-chen-prime-courses').textContent = primeCoursePercentage.toFixed(0);
         document.getElementById('metric-chen-prime-time').textContent = primeTimePercentage.toFixed(0);
 
-        // Display CH EN Daily/Weekly Summary
         document.getElementById('metric-mo').textContent = (dailyChenMinutes.Mo / 60).toFixed(1);
         document.getElementById('metric-tu').textContent = (dailyChenMinutes.Tu / 60).toFixed(1);
         document.getElementById('metric-we').textContent = (dailyChenMinutes.We / 60).toFixed(1);
