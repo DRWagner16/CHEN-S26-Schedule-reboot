@@ -312,9 +312,9 @@
     {
         "course_number": "CH EN 5960-AddMan",
         "instructors": "Huang",
-        "days": "MW",
-        "time_of_day": "11:50AM-01:10PM",
-        "duration": 80,
+        "days": "MWF",
+        "time_of_day": "02:00PM-02:50PM",
+        "duration": 50,
         "location": "TBA",
         "type": "Elective",
         "notes": "None for now"
@@ -323,7 +323,7 @@
         "course_number": "CH EN 6208-ML",
         "instructors": "Faroughi",
         "days": "MW",
-        "time_of_day": "01:25PM-02:45PM",
+        "time_of_day": "03:00PM-04:20PM",
         "duration": 80,
         "location": "TBA",
         "type": "Elective",
