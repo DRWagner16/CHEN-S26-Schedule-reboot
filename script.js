@@ -145,7 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
             return instructorMatch && typeMatch && courseMatch && locationMatch;
         });
 
-        // --- NEW --- Call the metrics calculation function
         calculateAndDisplayMetrics(filteredCourses);
 
         Object.values(dayMap).forEach(dayCode => {
@@ -179,32 +178,75 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- NEW --- Function to calculate and display all metrics
+    // --- MODIFIED --- This function is completely new to handle your specific metric requests
     function calculateAndDisplayMetrics(courses) {
-        let totalWeeklyMinutes = 0;
-        const dailyMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
+        // --- Metric 1: MEB Room Usage ---
+        const mebRooms = ["MEB 1292", "MEB 2550", "MEB 3520"];
+        let mebUsageMinutes = 0;
 
+        // --- Metric 2 & 3: CH EN Prime Time ---
+        const primeTimeStart = 9 * 60; // 9:00 AM in minutes
+        const primeTimeEnd = 14 * 60; // 2:00 PM in minutes
+        let chenCoursesInPrimeTime = 0;
+        let totalChenCourses = 0;
+        let chenTimeInPrimeTimeMinutes = 0;
+        let totalChenTimeMinutes = 0;
+
+        // --- Metric 4: CH EN Daily/Weekly Summary ---
+        let totalWeeklyChenMinutes = 0;
+        const dailyChenMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
+
+        // --- Loop through all filtered courses to calculate metrics ---
         courses.forEach(course => {
-            if (course.duration && course.days) {
-                const dailyDuration = course.duration; // Duration of one class session
-                totalWeeklyMinutes += dailyDuration * course.days.length; // Add to weekly total for each day it occurs
-                
+            if (!course.duration || !course.days) return; // Skip courses with no duration or days
+
+            const weeklyDuration = course.duration * course.days.length;
+
+            // Calculate MEB usage
+            if (mebRooms.includes(course.location)) {
+                mebUsageMinutes += weeklyDuration;
+            }
+
+            // Check if it's a CH EN course for the other metrics
+            if (course.course_number.startsWith("CH EN")) {
+                totalChenCourses++;
+                totalChenTimeMinutes += weeklyDuration;
+
+                // Calculate CH EN Weekly Summary
+                totalWeeklyChenMinutes += weeklyDuration;
                 for (const dayChar of course.days) {
-                    const dayCode = dayMap[dayChar]; // e.g., 'M' -> 'Mo'
-                    if (dayCode in dailyMinutes) {
-                        dailyMinutes[dayCode] += dailyDuration;
+                    const dayCode = dayMap[dayChar];
+                    if (dayCode in dailyChenMinutes) {
+                        dailyChenMinutes[dayCode] += course.duration;
                     }
+                }
+
+                // Check for Prime Time
+                if (course.startMinutes >= primeTimeStart && course.startMinutes < primeTimeEnd) {
+                    chenCoursesInPrimeTime++;
+                    chenTimeInPrimeTimeMinutes += weeklyDuration;
                 }
             }
         });
 
-        // Update the HTML elements
-        document.getElementById('metric-mo').textContent = (dailyMinutes.Mo / 60).toFixed(1);
-        document.getElementById('metric-tu').textContent = (dailyMinutes.Tu / 60).toFixed(1);
-        document.getElementById('metric-we').textContent = (dailyMinutes.We / 60).toFixed(1);
-        document.getElementById('metric-th').textContent = (dailyMinutes.Th / 60).toFixed(1);
-        document.getElementById('metric-fr').textContent = (dailyMinutes.Fr / 60).toFixed(1);
-        document.getElementById('metric-total').textContent = (totalWeeklyMinutes / 60).toFixed(1);
+        // --- Final Calculations & Display ---
+        
+        // Display MEB Usage
+        document.getElementById('metric-meb-usage').textContent = (mebUsageMinutes / 60).toFixed(1);
+
+        // Display CH EN Prime Time Metrics
+        const primeCoursePercentage = (totalChenCourses > 0) ? (chenCoursesInPrimeTime / totalChenCourses) * 100 : 0;
+        const primeTimePercentage = (totalChenTimeMinutes > 0) ? (chenTimeInPrimeTimeMinutes / totalChenTimeMinutes) * 100 : 0;
+        document.getElementById('metric-chen-prime-courses').textContent = primeCoursePercentage.toFixed(0);
+        document.getElementById('metric-chen-prime-time').textContent = primeTimePercentage.toFixed(0);
+
+        // Display CH EN Daily/Weekly Summary
+        document.getElementById('metric-mo').textContent = (dailyChenMinutes.Mo / 60).toFixed(1);
+        document.getElementById('metric-tu').textContent = (dailyChenMinutes.Tu / 60).toFixed(1);
+        document.getElementById('metric-we').textContent = (dailyChenMinutes.We / 60).toFixed(1);
+        document.getElementById('metric-th').textContent = (dailyChenMinutes.Th / 60).toFixed(1);
+        document.getElementById('metric-fr').textContent = (dailyChenMinutes.Fr / 60).toFixed(1);
+        document.getElementById('metric-total').textContent = (totalWeeklyChenMinutes / 60).toFixed(1);
     }
     
     function placeCourseOnCalendar(course, day, width = 100, left = 0) {
@@ -228,7 +270,6 @@ document.addEventListener('DOMContentLoaded', () => {
         eventDiv.style.backgroundColor = color;
         eventDiv.style.borderColor = `hsl(${parseInt(color.substring(4))}, 50%, 60%)`;
 
-        // --- MODIFIED --- Tooltip now includes the 'notes' field
         eventDiv.innerHTML = `
             <div class="event-title">${course.course_number}</div>
             <div class="event-tooltip">
