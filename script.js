@@ -76,13 +76,11 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('[FATAL] Error loading schedule data:', error));
     }
     
-    // --- MODIFIED --- This function now handles multiple locations
     function populateFilters(courses) {
         const uniqueCourses = [...new Set(courses.map(course => course.course_number))].sort();
         uniqueCourses.forEach(courseName => {
             courseColorMap.set(courseName, stringToHslColor(courseName));
         });
-
         const allInstructorNames = courses.flatMap(course => course.instructors.split(';').map(name => name.trim()));
         const uniqueInstructors = [...new Set(allInstructorNames)].sort();
         uniqueInstructors.forEach(name => {
@@ -93,7 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 instructorFilter.appendChild(option);
             }
         });
-
         const uniqueTypes = [...new Set(courses.map(course => course.type))].sort();
         uniqueTypes.forEach(typeName => {
             if (typeName && typeName.toLowerCase() !== 'nan') {
@@ -103,8 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 typeFilter.appendChild(option);
             }
         });
-
-        // This logic is now identical to how instructors are handled
         const allLocationNames = courses.flatMap(course => (course.location || '').split(';').map(name => name.trim()));
         const uniqueLocations = [...new Set(allLocationNames)].sort();
         uniqueLocations.forEach(locationName => {
@@ -115,7 +110,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 locationFilter.appendChild(option);
             }
         });
-
         uniqueCourses.forEach(courseName => {
             const itemDiv = document.createElement('div');
             itemDiv.className = 'checkbox-item';
@@ -132,7 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MODIFIED --- This function now handles multiple locations
     function filterAndRedrawCalendar() {
         document.querySelectorAll('.class-event').forEach(event => event.remove());
 
@@ -182,64 +175,69 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MODIFIED --- This function now handles multiple locations
+    // --- MODIFIED --- This function is completely new to handle your specific metric requests
     function calculateAndDisplayMetrics(courses) {
-        const mebRooms = ["MEB 1292", "MEB 2550", "MEB 3520"];
-        let mebUsageMinutes = 0;
+        const primeTimeStart = 9 * 60; // 9:00 AM
+        const primeTimeEnd = 14 * 60;   // 2:00 PM
 
-        const primeTimeStart = 9 * 60;
-        const primeTimeEnd = 14 * 60;
-        let chenCoursesInPrimeTime = 0;
-        let totalChenCourses = 0;
-        let chenTimeInPrimeTimeMinutes = 0;
-        let totalChenTimeMinutes = 0;
-
-        let totalWeeklyChenMinutes = 0;
-        const dailyChenMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
+        let mwfPrimeTimeMinutes = 0;
+        let mwfTotalMinutes = 0;
+        let trPrimeTimeMinutes = 0;
+        let trTotalMinutes = 0;
+        
+        let dailyMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
 
         courses.forEach(course => {
             if (!course.duration || !course.days) return;
 
-            const weeklyDuration = course.duration * course.days.length;
+            const isPrimeTime = course.startMinutes >= primeTimeStart && course.startMinutes < primeTimeEnd;
 
-            // Check MEB usage across multiple possible locations
-            const courseLocations = (course.location || '').split(';').map(l => l.trim());
-            if (courseLocations.some(loc => mebRooms.includes(loc))) {
-                mebUsageMinutes += weeklyDuration;
-            }
+            for (const dayChar of course.days) {
+                const dayCode = dayMap[dayChar];
+                if (!dayCode) continue;
 
-            if (course.course_number.startsWith("CH EN")) {
-                totalChenCourses++;
-                totalChenTimeMinutes += weeklyDuration;
+                // Add to daily totals for hour/percentage calculations
+                dailyMinutes[dayCode] += course.duration;
 
-                totalWeeklyChenMinutes += weeklyDuration;
-                for (const dayChar of course.days) {
-                    const dayCode = dayMap[dayChar];
-                    if (dayCode in dailyChenMinutes) {
-                        dailyChenMinutes[dayCode] += course.duration;
+                if (dayChar === 'M' || dayChar === 'W' || dayChar === 'F') {
+                    mwfTotalMinutes += course.duration;
+                    if (isPrimeTime) {
+                        mwfPrimeTimeMinutes += course.duration;
                     }
-                }
-
-                if (course.startMinutes >= primeTimeStart && course.startMinutes < primeTimeEnd) {
-                    chenCoursesInPrimeTime++;
-                    chenTimeInPrimeTimeMinutes += weeklyDuration;
+                } else if (dayChar === 'T' || dayChar === 'R') {
+                    trTotalMinutes += course.duration;
+                    if (isPrimeTime) {
+                        trPrimeTimeMinutes += course.duration;
+                    }
                 }
             }
         });
 
-        document.getElementById('metric-meb-usage').textContent = (mebUsageMinutes / 60).toFixed(1);
+        const totalWeeklyMinutes = Object.values(dailyMinutes).reduce((sum, mins) => sum + mins, 0);
+        const totalPrimeTimeMinutes = mwfPrimeTimeMinutes + trPrimeTimeMinutes;
+        const totalMinutesOutsidePrime = totalWeeklyMinutes - totalPrimeTimeMinutes;
 
-        const primeCoursePercentage = (totalChenCourses > 0) ? (chenCoursesInPrimeTime / totalChenCourses) * 100 : 0;
-        const primeTimePercentage = (totalChenTimeMinutes > 0) ? (chenTimeInPrimeTimeMinutes / totalChenTimeMinutes) * 100 : 0;
-        document.getElementById('metric-chen-prime-courses').textContent = primeCoursePercentage.toFixed(0);
-        document.getElementById('metric-chen-prime-time').textContent = primeTimePercentage.toFixed(0);
+        // --- Final Calculations & Display ---
+        const mwfPrimePercentage = (mwfTotalMinutes > 0) ? (mwfPrimeTimeMinutes / mwfTotalMinutes) * 100 : 0;
+        const trPrimePercentage = (trTotalMinutes > 0) ? (trPrimeTimeMinutes / trTotalMinutes) * 100 : 0;
 
-        document.getElementById('metric-mo').textContent = (dailyChenMinutes.Mo / 60).toFixed(1);
-        document.getElementById('metric-tu').textContent = (dailyChenMinutes.Tu / 60).toFixed(1);
-        document.getElementById('metric-we').textContent = (dailyChenMinutes.We / 60).toFixed(1);
-        document.getElementById('metric-th').textContent = (dailyChenMinutes.Th / 60).toFixed(1);
-        document.getElementById('metric-fr').textContent = (dailyChenMinutes.Fr / 60).toFixed(1);
-        document.getElementById('metric-total').textContent = (totalWeeklyChenMinutes / 60).toFixed(1);
+        document.getElementById('metric-mwf-prime').textContent = mwfPrimePercentage.toFixed(0);
+        document.getElementById('metric-tr-prime').textContent = trPrimePercentage.toFixed(0);
+        document.getElementById('metric-outside-prime').textContent = (totalMinutesOutsidePrime / 60).toFixed(1);
+
+        document.getElementById('metric-mo-hrs').textContent = (dailyMinutes.Mo / 60).toFixed(1);
+        document.getElementById('metric-tu-hrs').textContent = (dailyMinutes.Tu / 60).toFixed(1);
+        document.getElementById('metric-we-hrs').textContent = (dailyMinutes.We / 60).toFixed(1);
+        document.getElementById('metric-th-hrs').textContent = (dailyMinutes.Th / 60).toFixed(1);
+        document.getElementById('metric-fr-hrs').textContent = (dailyMinutes.Fr / 60).toFixed(1);
+
+        document.getElementById('metric-mo-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Mo / totalWeeklyMinutes) * 100 : 0).toFixed(0);
+        document.getElementById('metric-tu-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Tu / totalWeeklyMinutes) * 100 : 0).toFixed(0);
+        document.getElementById('metric-we-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.We / totalWeeklyMinutes) * 100 : 0).toFixed(0);
+        document.getElementById('metric-th-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Th / totalWeeklyMinutes) * 100 : 0).toFixed(0);
+        document.getElementById('metric-fr-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Fr / totalWeeklyMinutes) * 100 : 0).toFixed(0);
+
+        document.getElementById('metric-total-hrs').textContent = (totalWeeklyMinutes / 60).toFixed(1);
     }
     
     function placeCourseOnCalendar(course, day, width = 100, left = 0) {
