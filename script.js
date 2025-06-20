@@ -175,51 +175,46 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MODIFIED --- This function now filters for specific CH EN courses before calculating
+    // --- MODIFIED --- This function now tracks individual MEB rooms and updates Prime Time % calculation
     function calculateAndDisplayMetrics(courses) {
-        const primeTimeStart = 9 * 60; // 9:00 AM
-        const primeTimeEnd = 14 * 60;   // 2:00 PM
+        const primeTimeStart = 9 * 60;
+        const primeTimeEnd = 14 * 60;
 
-        let mwfPrimeTimeMinutes = 0;
-        let mwfTotalMinutes = 0;
-        let trPrimeTimeMinutes = 0;
-        let trTotalMinutes = 0;
+        // --- MODIFIED: Track individual MEB rooms ---
+        let mebRoomUsageMinutes = { "MEB 1292": 0, "MEB 2550": 0, "MEB 3520": 0 };
         
+        let mwfPrimeTimeMinutes = 0;
+        let trPrimeTimeMinutes = 0;
         let dailyMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
 
         courses.forEach(course => {
-            // --- NEW: Filter condition for CH EN courses from 1000-5999 level ---
-            if (!course.course_number.startsWith("CH EN")) {
-                return; // Skip if it's not a CH EN course
-            }
+            if (!course.course_number.startsWith("CH EN")) return;
             const courseNumStr = course.course_number.replace("CH EN", "").trim();
             const courseNum = parseInt(courseNumStr, 10);
-            if (isNaN(courseNum) || courseNum < 1000 || courseNum > 5999) {
-                return; // Skip if the course number is not in the valid range
-            }
-            // --- End of new filter condition ---
-
+            if (isNaN(courseNum) || courseNum < 1000 || courseNum > 5999) return;
+            
             if (!course.duration || !course.days) return;
+
+            // --- MODIFIED: Calculate individual MEB room usage ---
+            const courseLocations = (course.location || '').split(';').map(l => l.trim());
+            courseLocations.forEach(loc => {
+                if (loc in mebRoomUsageMinutes) {
+                    // Add the duration for each day the course occurs
+                    mebRoomUsageMinutes[loc] += course.duration * course.days.length;
+                }
+            });
 
             const isPrimeTime = course.startMinutes >= primeTimeStart && course.startMinutes < primeTimeEnd;
 
             for (const dayChar of course.days) {
                 const dayCode = dayMap[dayChar];
                 if (!dayCode) continue;
-
-                // Add to daily totals for hour/percentage calculations
                 dailyMinutes[dayCode] += course.duration;
 
                 if (dayChar === 'M' || dayChar === 'W' || dayChar === 'F') {
-                    mwfTotalMinutes += course.duration;
-                    if (isPrimeTime) {
-                        mwfPrimeTimeMinutes += course.duration;
-                    }
+                    if (isPrimeTime) mwfPrimeTimeMinutes += course.duration;
                 } else if (dayChar === 'T' || dayChar === 'R') {
-                    trTotalMinutes += course.duration;
-                    if (isPrimeTime) {
-                        trPrimeTimeMinutes += course.duration;
-                    }
+                    if (isPrimeTime) trPrimeTimeMinutes += course.duration;
                 }
             }
         });
@@ -229,13 +224,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalMinutesOutsidePrime = totalWeeklyMinutes - totalPrimeTimeMinutes;
 
         // --- Final Calculations & Display ---
-        const mwfPrimePercentage = (mwfTotalMinutes > 0) ? (mwfPrimeTimeMinutes / mwfTotalMinutes) * 100 : 0;
-        const trPrimePercentage = (trTotalMinutes > 0) ? (trPrimeTimeMinutes / trTotalMinutes) * 100 : 0;
+        
+        // Display individual MEB room usage
+        document.getElementById('metric-meb-1292').textContent = (mebRoomUsageMinutes["MEB 1292"] / 60).toFixed(1);
+        document.getElementById('metric-meb-2550').textContent = (mebRoomUsageMinutes["MEB 2550"] / 60).toFixed(1);
+        document.getElementById('metric-meb-3520').textContent = (mebRoomUsageMinutes["MEB 3520"] / 60).toFixed(1);
+
+        // --- MODIFIED: Prime Time % is now of total weekly hours ---
+        const mwfPrimePercentage = (totalWeeklyMinutes > 0) ? (mwfPrimeTimeMinutes / totalWeeklyMinutes) * 100 : 0;
+        const trPrimePercentage = (totalWeeklyMinutes > 0) ? (trPrimeTimeMinutes / totalWeeklyMinutes) * 100 : 0;
 
         document.getElementById('metric-mwf-prime').textContent = mwfPrimePercentage.toFixed(0);
         document.getElementById('metric-tr-prime').textContent = trPrimePercentage.toFixed(0);
         document.getElementById('metric-outside-prime').textContent = (totalMinutesOutsidePrime / 60).toFixed(1);
 
+        // Display Daily Distribution
         document.getElementById('metric-mo-hrs').textContent = (dailyMinutes.Mo / 60).toFixed(1);
         document.getElementById('metric-tu-hrs').textContent = (dailyMinutes.Tu / 60).toFixed(1);
         document.getElementById('metric-we-hrs').textContent = (dailyMinutes.We / 60).toFixed(1);
