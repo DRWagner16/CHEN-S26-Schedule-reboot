@@ -216,3 +216,11 @@ h3 {
     margin-top: 10px;
     font-size: 1.3em;
 }
+.metric-section {
+    margin-bottom: 15px;
+}
+.metric-section h4 {
+    margin-bottom: 10px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
