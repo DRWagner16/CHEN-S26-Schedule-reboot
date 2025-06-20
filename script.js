@@ -175,14 +175,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MODIFIED --- This function now tracks individual MEB rooms and updates Prime Time % calculation
+    // --- MODIFIED --- This function has new logic for calculating prime time overlap.
     function calculateAndDisplayMetrics(courses) {
-        const primeTimeStart = 9 * 60;
-        const primeTimeEnd = 14 * 60;
+        const primeTimeStart = 9 * 60; // 9:00 AM
+        const primeTimeEnd = 14 * 60;   // 2:00 PM
 
-        // --- MODIFIED: Track individual MEB rooms ---
         let mebRoomUsageMinutes = { "MEB 1292": 0, "MEB 2550": 0, "MEB 3520": 0 };
-        
         let mwfPrimeTimeMinutes = 0;
         let trPrimeTimeMinutes = 0;
         let dailyMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
@@ -193,28 +191,34 @@ document.addEventListener('DOMContentLoaded', () => {
             const courseNum = parseInt(courseNumStr, 10);
             if (isNaN(courseNum) || courseNum < 1000 || courseNum > 5999) return;
             
-            if (!course.duration || !course.days) return;
+            if (!course.duration || !course.days || !course.startMinutes) return;
 
-            // --- MODIFIED: Calculate individual MEB room usage ---
             const courseLocations = (course.location || '').split(';').map(l => l.trim());
             courseLocations.forEach(loc => {
                 if (loc in mebRoomUsageMinutes) {
-                    // Add the duration for each day the course occurs
                     mebRoomUsageMinutes[loc] += course.duration * course.days.length;
                 }
             });
 
-            const isPrimeTime = course.startMinutes >= primeTimeStart && course.startMinutes < primeTimeEnd;
+            // --- NEW: Accurate calculation of prime time overlap ---
+            const courseEndMinutes = course.startMinutes + course.duration;
+            const overlapStart = Math.max(course.startMinutes, primeTimeStart);
+            const overlapEnd = Math.min(courseEndMinutes, primeTimeEnd);
+            const primeMinutesForThisCourse = Math.max(0, overlapEnd - overlapStart);
+            // --- END NEW ---
 
             for (const dayChar of course.days) {
                 const dayCode = dayMap[dayChar];
                 if (!dayCode) continue;
+
                 dailyMinutes[dayCode] += course.duration;
 
                 if (dayChar === 'M' || dayChar === 'W' || dayChar === 'F') {
-                    if (isPrimeTime) mwfPrimeTimeMinutes += course.duration;
+                    // Add the calculated overlap instead of the full duration
+                    mwfPrimeTimeMinutes += primeMinutesForThisCourse;
                 } else if (dayChar === 'T' || dayChar === 'R') {
-                    if (isPrimeTime) trPrimeTimeMinutes += course.duration;
+                    // Add the calculated overlap instead of the full duration
+                    trPrimeTimeMinutes += primeMinutesForThisCourse;
                 }
             }
         });
@@ -225,12 +229,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // --- Final Calculations & Display ---
         
-        // Display individual MEB room usage
         document.getElementById('metric-meb-1292').textContent = (mebRoomUsageMinutes["MEB 1292"] / 60).toFixed(1);
         document.getElementById('metric-meb-2550').textContent = (mebRoomUsageMinutes["MEB 2550"] / 60).toFixed(1);
         document.getElementById('metric-meb-3520').textContent = (mebRoomUsageMinutes["MEB 3520"] / 60).toFixed(1);
 
-        // --- MODIFIED: Prime Time % is now of total weekly hours ---
         const mwfPrimePercentage = (totalWeeklyMinutes > 0) ? (mwfPrimeTimeMinutes / totalWeeklyMinutes) * 100 : 0;
         const trPrimePercentage = (totalWeeklyMinutes > 0) ? (trPrimeTimeMinutes / totalWeeklyMinutes) * 100 : 0;
 
@@ -238,7 +240,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('metric-tr-prime').textContent = trPrimePercentage.toFixed(0);
         document.getElementById('metric-outside-prime').textContent = (totalMinutesOutsidePrime / 60).toFixed(1);
 
-        // Display Daily Distribution
         document.getElementById('metric-mo-hrs').textContent = (dailyMinutes.Mo / 60).toFixed(1);
         document.getElementById('metric-tu-hrs').textContent = (dailyMinutes.Tu / 60).toFixed(1);
         document.getElementById('metric-we-hrs').textContent = (dailyMinutes.We / 60).toFixed(1);
