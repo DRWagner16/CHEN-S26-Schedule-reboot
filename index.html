@@ -76,23 +76,24 @@
         </div>
         <div class="metrics-dashboard">
             <h2>Schedule Analysis</h2>
-            <div class="metrics-container">
-                <div class="metric-item">Total MEB Room Usage (selected courses): <strong id="metric-meb-usage">0.0</strong> hrs/week</div>
-                <div class="metric-item">CH EN Courses in Primetime (9am-2pm): <strong id="metric-chen-prime-courses">0</strong>%</div>
-                <div class="metric-item">CH EN Time in Primetime (9am-2pm): <strong id="metric-chen-prime-time">0</strong>%</div>
-            </div>
             
+            <div class="metric-section">
+                <h4>Prime Time Usage (9am - 2pm)</h4>
+                <div class="metric-item">MWF Course Time in Prime Time: <strong id="metric-mwf-prime">0</strong>%</div>
+                <div class="metric-item">TR Course Time in Prime Time: <strong id="metric-tr-prime">0</strong>%</div>
+                <div class="metric-item">Total Hours Outside Prime Time: <strong id="metric-outside-prime">0.0</strong> hrs</div>
+            </div>
+        
             <hr style="margin: 20px 0;">
         
-            <h2>CH EN Course Summary</h2>
-            <p style="font-size: 0.9em; color: #555;">(Only CH EN courses from your selection are included below)</p>
-            <div class="metrics-container">
-                <div class="metric-item">Monday: <strong id="metric-mo">0.0</strong> hrs</div>
-                <div class="metric-item">Tuesday: <strong id="metric-tu">0.0</strong> hrs</div>
-                <div class="metric-item">Wednesday: <strong id="metric-we">0.0</strong> hrs</div>
-                <div class="metric-item">Thursday: <strong id="metric-th">0.0</strong> hrs</div>
-                <div class="metric-item">Friday: <strong id="metric-fr">0.0</strong> hrs</div>
-                <div class="metric-item total">Total Weekly CH EN Hours: <strong id="metric-total">0.0</strong></div>
+            <div class="metric-section">
+                <h4>Daily Time Distribution</h4>
+                <div class="metric-item">Monday: <strong id="metric-mo-hrs">0.0</strong> hrs (<strong id="metric-mo-pct">0</strong>%)</div>
+                <div class="metric-item">Tuesday: <strong id="metric-tu-hrs">0.0</strong> hrs (<strong id="metric-tu-pct">0</strong>%)</div>
+                <div class="metric-item">Wednesday: <strong id="metric-we-hrs">0.0</strong> hrs (<strong id="metric-we-pct">0</strong>%)</div>
+                <div class="metric-item">Thursday: <strong id="metric-th-hrs">0.0</strong> hrs (<strong id="metric-th-pct">0</strong>%)</div>
+                <div class="metric-item">Friday: <strong id="metric-fr-hrs">0.0</strong> hrs (<strong id="metric-fr-pct">0</strong>%)</div>
+                <div class="metric-item total">Total Weekly Hours: <strong id="metric-total-hrs">0.0</strong></div>
             </div>
         </div>
     </div>
