@@ -175,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MODIFIED --- This function is completely new to handle your specific metric requests
+    // --- MODIFIED --- This function now filters for specific CH EN courses before calculating
     function calculateAndDisplayMetrics(courses) {
         const primeTimeStart = 9 * 60; // 9:00 AM
         const primeTimeEnd = 14 * 60;   // 2:00 PM
@@ -188,6 +188,17 @@ document.addEventListener('DOMContentLoaded', () => {
         let dailyMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
 
         courses.forEach(course => {
+            // --- NEW: Filter condition for CH EN courses from 1000-5999 level ---
+            if (!course.course_number.startsWith("CH EN")) {
+                return; // Skip if it's not a CH EN course
+            }
+            const courseNumStr = course.course_number.replace("CH EN", "").trim();
+            const courseNum = parseInt(courseNumStr, 10);
+            if (isNaN(courseNum) || courseNum < 1000 || courseNum > 5999) {
+                return; // Skip if the course number is not in the valid range
+            }
+            // --- End of new filter condition ---
+
             if (!course.duration || !course.days) return;
 
             const isPrimeTime = course.startMinutes >= primeTimeStart && course.startMinutes < primeTimeEnd;
