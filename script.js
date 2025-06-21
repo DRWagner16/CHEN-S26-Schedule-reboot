@@ -175,10 +175,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MODIFIED --- This function has new logic for calculating prime time overlap.
     function calculateAndDisplayMetrics(courses) {
-        const primeTimeStart = 9 * 60; // 9:00 AM
-        const primeTimeEnd = 14 * 60;   // 2:00 PM
+        const primeTimeStart = 9 * 60;
+        const primeTimeEnd = 14 * 60;
 
         let mebRoomUsageMinutes = { "MEB 1292": 0, "MEB 2550": 0, "MEB 3520": 0 };
         let mwfPrimeTimeMinutes = 0;
@@ -200,12 +199,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
-            // --- NEW: Accurate calculation of prime time overlap ---
             const courseEndMinutes = course.startMinutes + course.duration;
             const overlapStart = Math.max(course.startMinutes, primeTimeStart);
             const overlapEnd = Math.min(courseEndMinutes, primeTimeEnd);
             const primeMinutesForThisCourse = Math.max(0, overlapEnd - overlapStart);
-            // --- END NEW ---
 
             for (const dayChar of course.days) {
                 const dayCode = dayMap[dayChar];
@@ -214,10 +211,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 dailyMinutes[dayCode] += course.duration;
 
                 if (dayChar === 'M' || dayChar === 'W' || dayChar === 'F') {
-                    // Add the calculated overlap instead of the full duration
                     mwfPrimeTimeMinutes += primeMinutesForThisCourse;
                 } else if (dayChar === 'T' || dayChar === 'R') {
-                    // Add the calculated overlap instead of the full duration
                     trPrimeTimeMinutes += primeMinutesForThisCourse;
                 }
             }
@@ -227,8 +222,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalPrimeTimeMinutes = mwfPrimeTimeMinutes + trPrimeTimeMinutes;
         const totalMinutesOutsidePrime = totalWeeklyMinutes - totalPrimeTimeMinutes;
 
-        // --- Final Calculations & Display ---
-        
         document.getElementById('metric-meb-1292').textContent = (mebRoomUsageMinutes["MEB 1292"] / 60).toFixed(1);
         document.getElementById('metric-meb-2550').textContent = (mebRoomUsageMinutes["MEB 2550"] / 60).toFixed(1);
         document.getElementById('metric-meb-3520').textContent = (mebRoomUsageMinutes["MEB 3520"] / 60).toFixed(1);
@@ -255,6 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('metric-total-hrs').textContent = (totalWeeklyMinutes / 60).toFixed(1);
     }
     
+    // --- MODIFIED --- This function now includes the "Anticipated Enrollment" field
     function placeCourseOnCalendar(course, day, width = 100, left = 0) {
         const column = document.querySelector(`.day-content[data-day="${day}"]`);
         if (!column) return;
@@ -285,7 +279,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <strong>Location:</strong> ${course.location}<br>
                 <strong>Type:</strong> ${course.type}<br>
                 <strong>Duration:</strong> ${course.duration} min<br>
-                ${course.notes ? `<strong>Notes:</strong> ${course.notes}` : ''}
+                ${course.notes ? `<strong>Notes:</strong> ${course.notes}<br>` : ''}
+                ${course.anticipated_enrollment ? `<strong>Anticipated Enrollment:</strong> ${course.anticipated_enrollment}` : ''}
             </div>`;
             
         column.appendChild(eventDiv);
