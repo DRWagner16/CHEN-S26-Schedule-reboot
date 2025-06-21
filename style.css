@@ -285,3 +285,25 @@ h3 {
     flex-direction: column; /* This is the key: it stacks children vertically */
     align-items: center;   /* This will center your content on the page */
 }
+/* --- Styles for the new Course Table --- */
+.course-table-container {
+    width: 100%;
+    margin-top: 30px;
+}
+.course-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9em;
+}
+.course-table th, .course-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+.course-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+.course-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
