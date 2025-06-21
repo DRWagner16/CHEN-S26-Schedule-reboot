@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const locationFilter = document.getElementById('location-filter');
     const courseCheckboxesContainer = document.getElementById('course-checkboxes');
     const resetBtn = document.getElementById('reset-filters');
-    const unscheduledCoursesList = document.getElementById('unscheduled-courses-list'); // <-- NEW
+    const unscheduledCoursesList = document.getElementById('unscheduled-courses-list');
 
     const START_HOUR = 7;
     const END_HOUR = 20;
@@ -56,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 allCourses = data.map(course => {
                     const timeString = course.time_of_day;
-                    // --- MODIFIED: Handle potentially missing time string ---
                     if (!timeString || !timeString.match(/(\d{1,2}:\d{2})(AM|PM)/)) {
                         return { ...course, startMinutes: null, endMinutes: null };
                     }
@@ -130,7 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MODIFIED --- This function now splits courses into schedulable and unschedulable lists
     function filterAndRedrawCalendar() {
         document.querySelectorAll('.class-event').forEach(event => event.remove());
 
@@ -147,16 +145,14 @@ document.addEventListener('DOMContentLoaded', () => {
             return instructorMatch && typeMatch && courseMatch && locationMatch;
         });
 
-        // Split the filtered courses into two groups
         const schedulableCourses = filteredCourses.filter(c => c.startMinutes !== null && c.days && c.days.trim() !== '');
         const unschedulableCourses = filteredCourses.filter(c => c.startMinutes === null || !c.days || c.days.trim() === '');
 
-        // Pass only schedulable courses to the metrics and calendar functions
         calculateAndDisplayMetrics(schedulableCourses);
-        displayUnscheduledCourses(unschedulableCourses); // NEW function call
+        displayUnscheduledCourses(unschedulableCourses);
 
         Object.values(dayMap).forEach(dayCode => {
-            const dayEvents = schedulableCourses // Use schedulable courses
+            const dayEvents = schedulableCourses
                 .filter(course => course.days.includes(Object.keys(dayMap).find(key => dayMap[key] === dayCode)))
                 .sort((a, b) => a.startMinutes - b.startMinutes);
             if (dayEvents.length === 0) return;
@@ -186,10 +182,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- NEW --- This entire function displays courses in the new list section
     function displayUnscheduledCourses(courses) {
-        unscheduledCoursesList.innerHTML = ''; // Clear previous list
-
+        unscheduledCoursesList.innerHTML = '';
         if (courses.length === 0) {
             const li = document.createElement('li');
             li.textContent = 'No selected courses without a fixed schedule.';
@@ -197,7 +191,6 @@ document.addEventListener('DOMContentLoaded', () => {
             unscheduledCoursesList.appendChild(li);
             return;
         }
-
         courses.forEach(course => {
             const li = document.createElement('li');
             li.innerHTML = `
@@ -210,6 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- MODIFIED --- This function now calculates and displays the percentage for time outside prime.
     function calculateAndDisplayMetrics(courses) {
         const primeTimeStart = 9 * 60;
         const primeTimeEnd = 14 * 60;
@@ -254,6 +248,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalWeeklyMinutes = Object.values(dailyMinutes).reduce((sum, mins) => sum + mins, 0);
         const totalPrimeTimeMinutes = mwfPrimeTimeMinutes + trPrimeTimeMinutes;
         const totalMinutesOutsidePrime = totalWeeklyMinutes - totalPrimeTimeMinutes;
+
+        // --- Final Calculations & Display ---
         
         document.getElementById('metric-meb-1292').textContent = (mebRoomUsageMinutes["MEB 1292"] / 60).toFixed(1);
         document.getElementById('metric-meb-2550').textContent = (mebRoomUsageMinutes["MEB 2550"] / 60).toFixed(1);
@@ -261,11 +257,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const mwfPrimePercentage = (totalWeeklyMinutes > 0) ? (mwfPrimeTimeMinutes / totalWeeklyMinutes) * 100 : 0;
         const trPrimePercentage = (totalWeeklyMinutes > 0) ? (trPrimeTimeMinutes / totalWeeklyMinutes) * 100 : 0;
+        
+        // --- NEW: Calculate percentage for time outside prime ---
+        const outsidePrimePercentage = (totalWeeklyMinutes > 0) ? (totalMinutesOutsidePrime / totalWeeklyMinutes) * 100 : 0;
 
         document.getElementById('metric-mwf-prime').textContent = mwfPrimePercentage.toFixed(0);
         document.getElementById('metric-tr-prime').textContent = trPrimePercentage.toFixed(0);
-        document.getElementById('metric-outside-prime').textContent = (totalMinutesOutsidePrime / 60).toFixed(1);
 
+        // --- MODIFIED: Update the two new elements for hours and percentage ---
+        document.getElementById('metric-outside-prime-hrs').textContent = (totalMinutesOutsidePrime / 60).toFixed(1);
+        document.getElementById('metric-outside-prime-pct').textContent = outsidePrimePercentage.toFixed(0);
+
+        // Display Daily Distribution
         document.getElementById('metric-mo-hrs').textContent = (dailyMinutes.Mo / 60).toFixed(1);
         document.getElementById('metric-tu-hrs').textContent = (dailyMinutes.Tu / 60).toFixed(1);
         document.getElementById('metric-we-hrs').textContent = (dailyMinutes.We / 60).toFixed(1);
