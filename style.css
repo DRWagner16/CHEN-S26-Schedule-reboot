@@ -265,6 +265,7 @@ h3 {
 #unscheduled-courses-list li {
     padding: 10px;
     border-bottom: 1px solid #eee;
+    break-inside: avoid;
 }
 #unscheduled-courses-list li:last-child {
     border-bottom: none;
