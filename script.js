@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetBtn = document.getElementById('reset-filters');
     const showAllChenBtn = document.getElementById('show-all-chen-btn');
     const unscheduledCoursesList = document.getElementById('unscheduled-courses-list');
-    const courseTableBody = document.getElementById('course-table-body'); // --- NEW ---
+    const courseTableBody = document.getElementById('course-table-body');
 
     const START_HOUR = 7;
     const END_HOUR = 20;
@@ -22,9 +22,38 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchDataAndInitialize();
 
     instructorFilter.addEventListener('change', filterAndRedrawCalendar);
-    typeFilter.addEventListener('change', filterAndRedrawCalendar);
     locationFilter.addEventListener('change', filterAndRedrawCalendar);
     courseCheckboxesContainer.addEventListener('change', filterAndRedrawCalendar);
+
+    // --- MODIFIED: The event listener for the Type filter is now more advanced ---
+    typeFilter.addEventListener('change', () => {
+        const selectedType = typeFilter.value;
+
+        // If user selects "All Types", just redraw without changing checkboxes
+        if (selectedType === 'all') {
+            filterAndRedrawCalendar();
+            return;
+        }
+
+        // When a specific type is chosen, reset the other filters for a clean slate
+        instructorFilter.value = 'all';
+        locationFilter.value = 'all';
+
+        // Iterate through all course checkboxes
+        document.querySelectorAll('#course-checkboxes input[type="checkbox"]').forEach(cb => {
+            // Find the full course object corresponding to the checkbox
+            const course = allCourses.find(c => c.course_number === cb.value);
+            // If the course type matches the selected type, check the box. Otherwise, uncheck it.
+            if (course && course.type === selectedType) {
+                cb.checked = true;
+            } else {
+                cb.checked = false;
+            }
+        });
+
+        // Redraw the calendar and metrics with the new selection
+        filterAndRedrawCalendar();
+    });
 
     resetBtn.addEventListener('click', () => {
         instructorFilter.value = 'all';
@@ -154,7 +183,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function filterAndRedrawCalendar() {
-        document.querySelectorAll('.class-event').forEach(event => event.remove());
         const selectedInstructor = instructorFilter.value;
         const selectedType = typeFilter.value;
         const selectedLocation = locationFilter.value;
