@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < str.length; i++) {
             hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
-        const lightnessVariation = hash % 15;
+        const lightnessVariation = hash % 10;
         return `hsl(${baseHue}, ${s}%, ${l - lightnessVariation}%)`;
     }
 
