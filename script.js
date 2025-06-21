@@ -32,13 +32,41 @@ document.addEventListener('DOMContentLoaded', () => {
         filterAndRedrawCalendar();
     });
 
-    function stringToHslColor(str, s = 60, l = 75) {
+    // --- MODIFIED --- This function now assigns color based on course level
+    function stringToHslColor(str, s = 65, l = 75) {
+        // Define base hues for each course level
+        const levelHues = {
+            '1000': 200, // Teal
+            '2000': 120, // Green
+            '3000': 240, // Blue
+            '4000': 30,  // Orange
+            '5000': 0,   // Red
+            '6000': 280, // Purple
+        };
+
+        // Default hue for courses that don't match (e.g., ENGIN)
+        let baseHue = 300; // Magenta as default
+
+        const parts = str.split(' ');
+        if (parts.length > 1) {
+            const courseNum = parseInt(parts[parts.length - 1], 10);
+            if (!isNaN(courseNum)) {
+                const level = Math.floor(courseNum / 1000) * 1000;
+                if (level in levelHues) {
+                    baseHue = levelHues[level];
+                }
+            }
+        }
+
+        // Use a hash of the full string to create slight variations in lightness
         let hash = 0;
         for (let i = 0; i < str.length; i++) {
             hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
-        const h = hash % 360;
-        return `hsl(${h}, ${s}%, ${l}%)`;
+        const lightnessVariation = hash % 15; // Creates a variance of 0-14
+        
+        // Return the HSL color with a fixed base hue and varied lightness
+        return `hsl(${baseHue}, ${s}%, ${l - lightnessVariation}%)`;
     }
 
     function generateTimeSlots() {
@@ -203,7 +231,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MODIFIED --- This function now calculates and displays the percentage for time outside prime.
+    // --- MODIFIED --- This function now includes the ENGIN prefix check for MEB Usage
     function calculateAndDisplayMetrics(courses) {
         const primeTimeStart = 9 * 60;
         const primeTimeEnd = 14 * 60;
@@ -213,20 +241,25 @@ document.addEventListener('DOMContentLoaded', () => {
         let dailyMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
 
         courses.forEach(course => {
+            if (!course.duration || !course.days || !course.startMinutes) return;
+
+            // --- THIS IS THE NEW LOGIC FOR METRIC #1 ---
+            // Check for ENGIN prefix before calculating MEB usage
+            if (course.course_number.startsWith("ENGIN")) {
+                const courseLocations = (course.location || '').split(';').map(l => l.trim());
+                courseLocations.forEach(loc => {
+                    if (loc in mebRoomUsageMinutes) {
+                        mebRoomUsageMinutes[loc] += course.duration * course.days.length;
+                    }
+                });
+            }
+
+            // --- The rest of the metrics are still filtered for CH EN courses ---
             if (!course.course_number.startsWith("CH EN")) return;
             const courseNumStr = course.course_number.replace("CH EN", "").trim();
             const courseNum = parseInt(courseNumStr, 10);
             if (isNaN(courseNum) || courseNum < 1000 || courseNum > 5999) return;
             
-            if (!course.duration || !course.days || !course.startMinutes) return;
-
-            const courseLocations = (course.location || '').split(';').map(l => l.trim());
-            courseLocations.forEach(loc => {
-                if (loc in mebRoomUsageMinutes) {
-                    mebRoomUsageMinutes[loc] += course.duration * course.days.length;
-                }
-            });
-
             const courseEndMinutes = course.startMinutes + course.duration;
             const overlapStart = Math.max(course.startMinutes, primeTimeStart);
             const overlapEnd = Math.min(courseEndMinutes, primeTimeEnd);
@@ -248,8 +281,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalWeeklyMinutes = Object.values(dailyMinutes).reduce((sum, mins) => sum + mins, 0);
         const totalPrimeTimeMinutes = mwfPrimeTimeMinutes + trPrimeTimeMinutes;
         const totalMinutesOutsidePrime = totalWeeklyMinutes - totalPrimeTimeMinutes;
-
-        // --- Final Calculations & Display ---
         
         document.getElementById('metric-meb-1292').textContent = (mebRoomUsageMinutes["MEB 1292"] / 60).toFixed(1);
         document.getElementById('metric-meb-2550').textContent = (mebRoomUsageMinutes["MEB 2550"] / 60).toFixed(1);
@@ -258,17 +289,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const mwfPrimePercentage = (totalWeeklyMinutes > 0) ? (mwfPrimeTimeMinutes / totalWeeklyMinutes) * 100 : 0;
         const trPrimePercentage = (totalWeeklyMinutes > 0) ? (trPrimeTimeMinutes / totalWeeklyMinutes) * 100 : 0;
         
-        // --- NEW: Calculate percentage for time outside prime ---
         const outsidePrimePercentage = (totalWeeklyMinutes > 0) ? (totalMinutesOutsidePrime / totalWeeklyMinutes) * 100 : 0;
 
         document.getElementById('metric-mwf-prime').textContent = mwfPrimePercentage.toFixed(0);
         document.getElementById('metric-tr-prime').textContent = trPrimePercentage.toFixed(0);
 
-        // --- MODIFIED: Update the two new elements for hours and percentage ---
         document.getElementById('metric-outside-prime-hrs').textContent = (totalMinutesOutsidePrime / 60).toFixed(1);
         document.getElementById('metric-outside-prime-pct').textContent = outsidePrimePercentage.toFixed(0);
 
-        // Display Daily Distribution
         document.getElementById('metric-mo-hrs').textContent = (dailyMinutes.Mo / 60).toFixed(1);
         document.getElementById('metric-tu-hrs').textContent = (dailyMinutes.Tu / 60).toFixed(1);
         document.getElementById('metric-we-hrs').textContent = (dailyMinutes.We / 60).toFixed(1);
