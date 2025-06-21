@@ -8,8 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const locationFilter = document.getElementById('location-filter');
     const courseCheckboxesContainer = document.getElementById('course-checkboxes');
     const resetBtn = document.getElementById('reset-filters');
-    const showAllChenBtn = document.getElementById('show-all-chen-btn'); // --- NEW ---
+    const showAllChenBtn = document.getElementById('show-all-chen-btn');
     const unscheduledCoursesList = document.getElementById('unscheduled-courses-list');
+    const courseTableBody = document.getElementById('course-table-body'); // --- NEW ---
 
     const START_HOUR = 7;
     const END_HOUR = 20;
@@ -32,37 +33,25 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('#course-checkboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
         filterAndRedrawCalendar();
     });
-
-    // --- NEW: Event listener for the "Show All CH EN Courses" button ---
+    
     showAllChenBtn.addEventListener('click', () => {
-        // First, reset the dropdown filters to ensure a clean slate
         instructorFilter.value = 'all';
         typeFilter.value = 'all';
         locationFilter.value = 'all';
-
-        // Go through all course checkboxes
         document.querySelectorAll('#course-checkboxes input[type="checkbox"]').forEach(cb => {
-            // Check the box if its value (the course number) starts with "CH EN"
             if (cb.value.startsWith("CH EN")) {
                 cb.checked = true;
             } else {
                 cb.checked = false;
             }
         });
-
-        // Update the calendar with the new selection
         filterAndRedrawCalendar();
     });
 
     function courseToHslColor(course) {
         const typeBaseHues = {
-            'Year 1': 210,   // Blue
-            'Year 2': 120,   // Green
-            'Year 3': 50,    // Yellow/Gold
-            'Year 4': 0,     // Red
-            'Elective': 280, // Purple
-            'Graduate': 30,  // Orange
-            'Other': 300,    // Magenta
+            'Year 1': 210, 'Year 2': 120, 'Year 3': 50,
+            'Year 4': 0, 'Elective': 280, 'Graduate': 30, 'Other': 300,
         };
         let baseHue = typeBaseHues[course.type] ?? 0;
         let saturation = 65;
@@ -105,7 +94,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const endMinutes = startMinutes + course.duration;
                     return { ...course, startMinutes, endMinutes };
                 });
-                
                 populateFilters(allCourses);
                 filterAndRedrawCalendar();
             })
@@ -180,8 +168,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         const schedulableCourses = filteredCourses.filter(c => c.startMinutes !== null && c.days && c.days.trim() !== '');
         const unschedulableCourses = filteredCourses.filter(c => c.startMinutes === null || !c.days || c.days.trim() === '');
+        
+        updateCoursesTable(filteredCourses);
         calculateAndDisplayMetrics(schedulableCourses);
         displayUnscheduledCourses(unschedulableCourses);
+        
+        document.querySelectorAll('.day-content').forEach(dc => dc.innerHTML = '');
+
         Object.values(dayMap).forEach(dayCode => {
             const dayEvents = schedulableCourses
                 .filter(course => course.days.includes(Object.keys(dayMap).find(key => dayMap[key] === dayCode)))
@@ -208,6 +201,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     placeCourseOnCalendar(event, dayCode, width, left);
                 });
             });
+        });
+    }
+
+    function updateCoursesTable(courses) {
+        courseTableBody.innerHTML = '';
+        const chenCourses = courses.filter(course => course.course_number.startsWith("CH EN"));
+        if (chenCourses.length === 0) {
+            const row = courseTableBody.insertRow();
+            const cell = row.insertCell();
+            cell.colSpan = 8;
+            cell.textContent = 'No CH EN courses match the current filter selection.';
+            cell.style.textAlign = 'center';
+            return;
+        }
+        chenCourses.forEach(course => {
+            const row = courseTableBody.insertRow();
+            row.insertCell().textContent = course.course_number || '';
+            row.insertCell().textContent = course.type || '';
+            row.insertCell().textContent = course.time_of_day || '';
+            row.insertCell().textContent = course.days || '';
+            row.insertCell().textContent = course.instructors || '';
+            row.insertCell().textContent = course.location || '';
+            row.insertCell().textContent = course.anticipated_enrollment || 0;
+            row.insertCell().textContent = course.notes || '';
         });
     }
 
