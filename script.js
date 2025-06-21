@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const locationFilter = document.getElementById('location-filter');
     const courseCheckboxesContainer = document.getElementById('course-checkboxes');
     const resetBtn = document.getElementById('reset-filters');
+    const showAllChenBtn = document.getElementById('show-all-chen-btn'); // --- NEW ---
     const unscheduledCoursesList = document.getElementById('unscheduled-courses-list');
 
     const START_HOUR = 7;
@@ -32,9 +33,28 @@ document.addEventListener('DOMContentLoaded', () => {
         filterAndRedrawCalendar();
     });
 
-    // --- MODIFIED --- This function now assigns color based on course type, with hue variations.
+    // --- NEW: Event listener for the "Show All CH EN Courses" button ---
+    showAllChenBtn.addEventListener('click', () => {
+        // First, reset the dropdown filters to ensure a clean slate
+        instructorFilter.value = 'all';
+        typeFilter.value = 'all';
+        locationFilter.value = 'all';
+
+        // Go through all course checkboxes
+        document.querySelectorAll('#course-checkboxes input[type="checkbox"]').forEach(cb => {
+            // Check the box if its value (the course number) starts with "CH EN"
+            if (cb.value.startsWith("CH EN")) {
+                cb.checked = true;
+            } else {
+                cb.checked = false;
+            }
+        });
+
+        // Update the calendar with the new selection
+        filterAndRedrawCalendar();
+    });
+
     function courseToHslColor(course) {
-        // Define a base hue for each course type
         const typeBaseHues = {
             'Year 1': 210,   // Blue
             'Year 2': 120,   // Green
@@ -44,24 +64,17 @@ document.addEventListener('DOMContentLoaded', () => {
             'Graduate': 30,  // Orange
             'Other': 300,    // Magenta
         };
-        
-        // Get the base hue for the course's type, or a default gray
         let baseHue = typeBaseHues[course.type] ?? 0;
         let saturation = 65;
-        
-        // If the type isn't in our map, make it gray by setting saturation to 0
         if (typeBaseHues[course.type] === undefined) {
             saturation = 0;
         }
-
-        // Use a hash of the course number to create a small hue shift (+/- 10)
         let hash = 0;
         const str = course.course_number;
         for (let i = 0; i < str.length; i++) {
             hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
-        const hueVariation = (hash % 21) - 10; // Creates a variance from -10 to 10
-        
+        const hueVariation = (hash % 21) - 10;
         return `hsl(${baseHue + hueVariation}, ${saturation}%, 70%)`;
     }
 
@@ -99,19 +112,14 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('[FATAL] Error loading schedule data:', error));
     }
     
-    // --- MODIFIED --- This function now calls the new color generator
     function populateFilters(courses) {
-        // Build the color map based on the course type for each unique course number
         courseColorMap.clear();
         courses.forEach(course => {
             if (!courseColorMap.has(course.course_number)) {
-                // Pass the whole course object to the color function
                 courseColorMap.set(course.course_number, courseToHslColor(course));
             }
         });
-
         const uniqueCourses = [...new Set(courses.map(course => course.course_number))].sort();
-        
         const allInstructorNames = courses.flatMap(course => course.instructors.split(';').map(name => name.trim()));
         const uniqueInstructors = [...new Set(allInstructorNames)].sort();
         uniqueInstructors.forEach(name => {
@@ -122,8 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 instructorFilter.appendChild(option);
             }
         });
-
-        // Use the new list of types for the filter dropdown
         const uniqueTypes = [...new Set(courses.map(course => course.type))].sort();
         uniqueTypes.forEach(typeName => {
             if (typeName && typeName.toLowerCase() !== 'nan') {
@@ -133,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 typeFilter.appendChild(option);
             }
         });
-
         const allLocationNames = courses.flatMap(course => (course.location || '').split(';').map(name => name.trim()));
         const uniqueLocations = [...new Set(allLocationNames)].sort();
         uniqueLocations.forEach(locationName => {
@@ -144,7 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 locationFilter.appendChild(option);
             }
         });
-
         uniqueCourses.forEach(courseName => {
             const itemDiv = document.createElement('div');
             itemDiv.className = 'checkbox-item';
@@ -236,6 +240,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let trPrimeTimeMinutes = 0;
         let dailyMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
         courses.forEach(course => {
+            if (!course.duration || !course.days || !course.startMinutes) return;
             if (course.course_number.startsWith("CH EN") || course.course_number.startsWith("ENGIN")) {
                 const courseLocations = (course.location || '').split(';').map(l => l.trim());
                 courseLocations.forEach(loc => {
@@ -244,23 +249,24 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             }
-            if (!course.course_number.startsWith("CH EN")) return;
-            const courseNumStr = course.course_number.replace("CH EN", "").trim();
-            const courseNum = parseInt(courseNumStr, 10);
-            if (isNaN(courseNum) || courseNum < 1000 || courseNum > 5999) return;
-            if (!course.duration || !course.days || !course.startMinutes) return;
-            const courseEndMinutes = course.startMinutes + course.duration;
-            const overlapStart = Math.max(course.startMinutes, primeTimeStart);
-            const overlapEnd = Math.min(courseEndMinutes, primeTimeEnd);
-            const primeMinutesForThisCourse = Math.max(0, overlapEnd - overlapStart);
-            for (const dayChar of course.days) {
-                const dayCode = dayMap[dayChar];
-                if (!dayCode) continue;
-                dailyMinutes[dayCode] += course.duration;
-                if (dayChar === 'M' || dayChar === 'W' || dayChar === 'F') {
-                    mwfPrimeTimeMinutes += primeMinutesForThisCourse;
-                } else if (dayChar === 'T' || dayChar === 'R') {
-                    trPrimeTimeMinutes += primeMinutesForThisCourse;
+            if (course.course_number.startsWith("CH EN")) {
+                const courseNumStr = course.course_number.replace("CH EN", "").trim();
+                const courseNum = parseInt(courseNumStr, 10);
+                if (!isNaN(courseNum) && courseNum >= 1000 && courseNum <= 5999) {
+                    const courseEndMinutes = course.startMinutes + course.duration;
+                    const overlapStart = Math.max(course.startMinutes, primeTimeStart);
+                    const overlapEnd = Math.min(courseEndMinutes, primeTimeEnd);
+                    const primeMinutesForThisCourse = Math.max(0, overlapEnd - overlapStart);
+                    for (const dayChar of course.days) {
+                        const dayCode = dayMap[dayChar];
+                        if (!dayCode) continue;
+                        dailyMinutes[dayCode] += course.duration;
+                        if (dayChar === 'M' || dayChar === 'W' || dayChar === 'F') {
+                            mwfPrimeTimeMinutes += primeMinutesForThisCourse;
+                        } else if (dayChar === 'T' || dayChar === 'R') {
+                            trPrimeTimeMinutes += primeMinutesForThisCourse;
+                        }
+                    }
                 }
             }
         });
