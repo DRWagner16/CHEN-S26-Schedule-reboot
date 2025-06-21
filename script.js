@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const locationFilter = document.getElementById('location-filter');
     const courseCheckboxesContainer = document.getElementById('course-checkboxes');
     const resetBtn = document.getElementById('reset-filters');
+    const unscheduledCoursesList = document.getElementById('unscheduled-courses-list'); // <-- NEW
 
     const START_HOUR = 7;
     const END_HOUR = 20;
@@ -55,8 +56,11 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 allCourses = data.map(course => {
                     const timeString = course.time_of_day;
+                    // --- MODIFIED: Handle potentially missing time string ---
+                    if (!timeString || !timeString.match(/(\d{1,2}:\d{2})(AM|PM)/)) {
+                        return { ...course, startMinutes: null, endMinutes: null };
+                    }
                     const timeParts = timeString.match(/(\d{1,2}:\d{2})(AM|PM)/);
-                    if (!timeParts) return { ...course, startMinutes: null, endMinutes: null };
                     
                     const [time, ampm] = [timeParts[1], timeParts[2]];
                     let [hour, minute] = time.split(':').map(Number);
@@ -126,6 +130,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- MODIFIED --- This function now splits courses into schedulable and unschedulable lists
     function filterAndRedrawCalendar() {
         document.querySelectorAll('.class-event').forEach(event => event.remove());
 
@@ -142,10 +147,16 @@ document.addEventListener('DOMContentLoaded', () => {
             return instructorMatch && typeMatch && courseMatch && locationMatch;
         });
 
-        calculateAndDisplayMetrics(filteredCourses);
+        // Split the filtered courses into two groups
+        const schedulableCourses = filteredCourses.filter(c => c.startMinutes !== null && c.days && c.days.trim() !== '');
+        const unschedulableCourses = filteredCourses.filter(c => c.startMinutes === null || !c.days || c.days.trim() === '');
+
+        // Pass only schedulable courses to the metrics and calendar functions
+        calculateAndDisplayMetrics(schedulableCourses);
+        displayUnscheduledCourses(unschedulableCourses); // NEW function call
 
         Object.values(dayMap).forEach(dayCode => {
-            const dayEvents = filteredCourses
+            const dayEvents = schedulableCourses // Use schedulable courses
                 .filter(course => course.days.includes(Object.keys(dayMap).find(key => dayMap[key] === dayCode)))
                 .sort((a, b) => a.startMinutes - b.startMinutes);
             if (dayEvents.length === 0) return;
@@ -175,10 +186,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- NEW --- This entire function displays courses in the new list section
+    function displayUnscheduledCourses(courses) {
+        unscheduledCoursesList.innerHTML = ''; // Clear previous list
+
+        if (courses.length === 0) {
+            const li = document.createElement('li');
+            li.textContent = 'No selected courses without a fixed schedule.';
+            li.style.fontStyle = 'italic';
+            unscheduledCoursesList.appendChild(li);
+            return;
+        }
+
+        courses.forEach(course => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <strong>${course.course_number} (${course.type || 'N/A'})</strong><br>
+                Instructor(s): ${course.instructors || 'N/A'}<br>
+                Location: ${course.location || 'N/A'}<br>
+                ${course.notes ? `Notes: ${course.notes}` : ''}
+            `;
+            unscheduledCoursesList.appendChild(li);
+        });
+    }
+
     function calculateAndDisplayMetrics(courses) {
         const primeTimeStart = 9 * 60;
         const primeTimeEnd = 14 * 60;
-
         let mebRoomUsageMinutes = { "MEB 1292": 0, "MEB 2550": 0, "MEB 3520": 0 };
         let mwfPrimeTimeMinutes = 0;
         let trPrimeTimeMinutes = 0;
@@ -207,7 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
             for (const dayChar of course.days) {
                 const dayCode = dayMap[dayChar];
                 if (!dayCode) continue;
-
                 dailyMinutes[dayCode] += course.duration;
 
                 if (dayChar === 'M' || dayChar === 'W' || dayChar === 'F') {
@@ -221,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalWeeklyMinutes = Object.values(dailyMinutes).reduce((sum, mins) => sum + mins, 0);
         const totalPrimeTimeMinutes = mwfPrimeTimeMinutes + trPrimeTimeMinutes;
         const totalMinutesOutsidePrime = totalWeeklyMinutes - totalPrimeTimeMinutes;
-
+        
         document.getElementById('metric-meb-1292').textContent = (mebRoomUsageMinutes["MEB 1292"] / 60).toFixed(1);
         document.getElementById('metric-meb-2550').textContent = (mebRoomUsageMinutes["MEB 2550"] / 60).toFixed(1);
         document.getElementById('metric-meb-3520').textContent = (mebRoomUsageMinutes["MEB 3520"] / 60).toFixed(1);
@@ -248,7 +281,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('metric-total-hrs').textContent = (totalWeeklyMinutes / 60).toFixed(1);
     }
     
-    // --- MODIFIED --- This function now includes the "Anticipated Enrollment" field
     function placeCourseOnCalendar(course, day, width = 100, left = 0) {
         const column = document.querySelector(`.day-content[data-day="${day}"]`);
         if (!column) return;
