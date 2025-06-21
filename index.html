@@ -34,13 +34,16 @@
                     <option value="all">All Locations</option>
                 </select>
             </div>
-            <button id="reset-filters">Reset All Filters</button>
-            <button id="show-all-chen-btn">Show All CH EN Courses</button>
+            <div class="filter-actions">
+                <button id="reset-filters">Reset All Filters</button>
+                <button id="show-all-chen-btn">Show All CH EN Courses</button>
+            </div>
+            <div class="external-links">
+                <a href="https://class-schedule.app.utah.edu/main/1264/class_list.html?subject=CH%20EN" class="link-button" target="_blank" rel="noopener noreferrer">Official U of U Schedule</a>
+                <a href="https://drwagner16.github.io/CHEN-S25-Schedule/" class="link-button" target="_blank" rel="noopener noreferrer">Previous Year's Schedule</a>
+                <a href="https://registrar.utah.edu/scheduling/classes/times.php" class="link-button" target="_blank" rel="noopener noreferrer">Standard Time Blocks</a>
+            </div>
         </div>
-
-        <a href="https://class-schedule.app.utah.edu/main/1264/class_list.html?subject=CH%20EN" class="link-button" target="_blank" rel="noopener noreferrer">Official U of U Schedule</a>
-        <a href="https://drwagner16.github.io/CHEN-S25-Schedule/" class="link-button" target="_blank" rel="noopener noreferrer">Previous Year's Schedule</a>
-        <a href="https://registrar.utah.edu/scheduling/classes/times.php" class="link-button" target="_blank" rel="noopener noreferrer">Standard Time Blocks</a>
 
         <div class="course-filter-container">
             <h3>Filter by Course (select multiple)</h3>
@@ -53,56 +56,55 @@
                 <div class="time-column">
                     <div class="time-slot header">Time</div>
                 </div>
-                <div class="day-column">
-                    <div class="day-header">Monday</div>
-                    <div class="day-content" data-day="Mo"></div>
-                </div>
-                <div class="day-column">
-                    <div class="day-header">Tuesday</div>
-                    <div class="day-content" data-day="Tu"></div>
-                </div>
-                <div class="day-column">
-                    <div class="day-header">Wednesday</div>
-                    <div class="day-content" data-day="We"></div>
-                </div>
-                <div class="day-column">
-                    <div class="day-header">Thursday</div>
-                    <div class="day-content" data-day="Th"></div>
-                </div>
-                <div class="day-column">
-                    <div class="day-header">Friday</div>
-                    <div class="day-content" data-day="Fr"></div>
-                </div>
+                <div class="day-column"><div class="day-header">Monday</div><div class="day-content" data-day="Mo"></div></div>
+                <div class="day-column"><div class="day-header">Tuesday</div><div class="day-content" data-day="Tu"></div></div>
+                <div class="day-column"><div class="day-header">Wednesday</div><div class="day-content" data-day="We"></div></div>
+                <div class="day-column"><div class="day-header">Thursday</div><div class="day-content" data-day="Th"></div></div>
+                <div class="day-column"><div class="day-header">Friday</div><div class="day-content" data-day="Fr"></div></div>
             </div>
+        </div>
+        
+        <div class="course-table-container">
+            <h2>CH EN Course List</h2>
+            <table class="course-table">
+                <thead>
+                    <tr>
+                        <th>Course</th>
+                        <th>Type</th>
+                        <th>Time</th>
+                        <th>Days</th>
+                        <th>Instructor(s)</th>
+                        <th>Location(s)</th>
+                        <th>Enrollment</th>
+                        <th>Notes</th>
+                    </tr>
+                </thead>
+                <tbody id="course-table-body">
+                    </tbody>
+            </table>
         </div>
 
         <div class="unscheduled-courses-container">
             <h2>Courses Without Fixed Schedules</h2>
-            <ul id="unscheduled-courses-list">
-            </ul>
+            <ul id="unscheduled-courses-list"></ul>
         </div>
 
         <div class="metrics-dashboard">
             <h2>Schedule Analysis - CH EN UNDERGRAD ONLY</h2>
-            
             <div class="metric-section">
                 <h4>MEB Room Usage (hrs/week) - Includes ENGIN 1022 Usage</h4>
                 <div class="metric-item">MEB 1292: <strong id="metric-meb-1292">0.0</strong></div>
                 <div class="metric-item">MEB 2550: <strong id="metric-meb-2550">0.0</strong></div>
                 <div class="metric-item">MEB 3520: <strong id="metric-meb-3520">0.0</strong></div>
             </div>
-        
             <hr style="margin: 20px 0;">
-        
             <div class="metric-section">
                 <h4>Primetime Usage (9am - 2pm)</h4>
                 <div class="metric-item">MWF Primetime: <strong id="metric-mwf-prime">0</strong>% of total weekly hours</div>
                 <div class="metric-item">TuTh Primetime: <strong id="metric-tr-prime">0</strong>% of total weekly hours</div>
                 <div class="metric-item">Total Hours Outside Prime Time: <strong id="metric-outside-prime-hrs">0.0</strong> hrs (<strong id="metric-outside-prime-pct">0</strong>%)</div>
             </div>
-        
             <hr style="margin: 20px 0;">
-        
             <div class="metric-section">
                 <h4>Daily Time Distribution</h4>
                 <div class="metric-item">Monday: <strong id="metric-mo-hrs">0.0</strong> hrs (<strong id="metric-mo-pct">0</strong>%)</div>
