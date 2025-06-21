@@ -349,3 +349,12 @@ h3 {
         border-bottom: none;
     }
 }
+/* --- NEW: Add this rule to show hour lines on the calendar --- */
+.day-content {
+    /* This positioning is needed for the course blocks to be placed correctly within each day */
+    position: relative; 
+    
+    /* This creates the repeating horizontal lines */
+    background-image: linear-gradient(to bottom, #e8e8e8 1px, transparent 1px);
+    background-size: 100% 60px; /* Repeats a 60px tall block, with a 1px line at the top */
+}
