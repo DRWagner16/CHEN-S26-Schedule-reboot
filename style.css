@@ -170,8 +170,32 @@ h3 {
     line-height: 1.4; 
     pointer-events: none; 
 }
-.class-event:hover .event-tooltip { 
-    display: block; 
+/* --- Tooltip Base Styles --- */
+.event-tooltip {
+    display: none; /* Hidden by default */
+    position: absolute;
+    top: 0;
+    left: 102%; /* Appears on the right side by default */
+    width: 220px;
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+    border-radius: 6px;
+    z-index: 100;
+    pointer-events: none; /* Prevents the tooltip from interfering with other hovers */
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+/* New class to flip the tooltip to the left */
+.event-tooltip.tooltip-left {
+    left: auto; /* Turn off the default left positioning */
+    right: 102%; /* Position it on the left side */
+}
+
+/* New class to make the tooltip visible */
+.event-tooltip.tooltip-visible {
+    display: block;
 }
 .event-tooltip strong { 
     color: #a3c4f3; 
