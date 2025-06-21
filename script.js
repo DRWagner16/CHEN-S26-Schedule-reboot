@@ -32,18 +32,37 @@ document.addEventListener('DOMContentLoaded', () => {
         filterAndRedrawCalendar();
     });
 
-    // --- MODIFIED --- This function is new and assigns a specific color based on course type
-    function typeToHslColor(courseType) {
-        // Define a consistent color for each type of course
-        const typeColorMap = {
-            'Lecture':    'hsl(210, 65%, 70%)', // Blue
-            'Lab':        'hsl(120, 60%, 65%)', // Green
-            'Seminar':    'hsl(50, 75%, 70%)',  // Yellow
-            'Discussion': 'hsl(280, 50%, 75%)', // Purple
-            'Online':     'hsl(0, 0%, 75%)',      // Gray
+    // --- MODIFIED --- This function now assigns color based on course type, with hue variations.
+    function courseToHslColor(course) {
+        // Define a base hue for each course type
+        const typeBaseHues = {
+            'Year 1': 210,   // Blue
+            'Year 2': 120,   // Green
+            'Year 3': 50,    // Yellow/Gold
+            'Year 4': 0,     // Red
+            'Elective': 280, // Purple
+            'Graduate': 30,  // Orange
+            'Other': 300,    // Magenta
         };
-        // Return the color for the type, or a default light gray if the type is not found
-        return typeColorMap[courseType] || 'hsl(0, 0%, 80%)';
+        
+        // Get the base hue for the course's type, or a default gray
+        let baseHue = typeBaseHues[course.type] ?? 0;
+        let saturation = 65;
+        
+        // If the type isn't in our map, make it gray by setting saturation to 0
+        if (typeBaseHues[course.type] === undefined) {
+            saturation = 0;
+        }
+
+        // Use a hash of the course number to create a small hue shift (+/- 10)
+        let hash = 0;
+        const str = course.course_number;
+        for (let i = 0; i < str.length; i++) {
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const hueVariation = (hash % 21) - 10; // Creates a variance from -10 to 10
+        
+        return `hsl(${baseHue + hueVariation}, ${saturation}%, 70%)`;
     }
 
     function generateTimeSlots() {
@@ -80,17 +99,16 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('[FATAL] Error loading schedule data:', error));
     }
     
-    // --- MODIFIED --- This function now builds the color map based on course type
+    // --- MODIFIED --- This function now calls the new color generator
     function populateFilters(courses) {
-        // --- This section is new ---
         // Build the color map based on the course type for each unique course number
         courseColorMap.clear();
         courses.forEach(course => {
             if (!courseColorMap.has(course.course_number)) {
-                courseColorMap.set(course.course_number, typeToHslColor(course.type));
+                // Pass the whole course object to the color function
+                courseColorMap.set(course.course_number, courseToHslColor(course));
             }
         });
-        // --- End new section ---
 
         const uniqueCourses = [...new Set(courses.map(course => course.course_number))].sort();
         
@@ -104,6 +122,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 instructorFilter.appendChild(option);
             }
         });
+
+        // Use the new list of types for the filter dropdown
         const uniqueTypes = [...new Set(courses.map(course => course.type))].sort();
         uniqueTypes.forEach(typeName => {
             if (typeName && typeName.toLowerCase() !== 'nan') {
@@ -113,6 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 typeFilter.appendChild(option);
             }
         });
+
         const allLocationNames = courses.flatMap(course => (course.location || '').split(';').map(name => name.trim()));
         const uniqueLocations = [...new Set(allLocationNames)].sort();
         uniqueLocations.forEach(locationName => {
@@ -123,6 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 locationFilter.appendChild(option);
             }
         });
+
         uniqueCourses.forEach(courseName => {
             const itemDiv = document.createElement('div');
             itemDiv.className = 'checkbox-item';
@@ -287,7 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const color = courseColorMap.get(course.course_number) || '#a3c4f3';
         eventDiv.style.backgroundColor = color;
-        eventDiv.style.borderColor = color; // Use same color for border for a solid look
+        eventDiv.style.borderColor = color;
 
         eventDiv.innerHTML = `
             <div class="event-title">${course.course_number}</div>
