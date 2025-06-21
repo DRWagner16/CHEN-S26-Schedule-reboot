@@ -32,40 +32,25 @@ document.addEventListener('DOMContentLoaded', () => {
         filterAndRedrawCalendar();
     });
 
-    // --- MODIFIED --- This function now assigns color based on course level
     function stringToHslColor(str, s = 65, l = 75) {
-        // Define base hues for each course level
         const levelHues = {
-            '1000': 200, // Teal
-            '2000': 120, // Green
-            '3000': 240, // Blue
-            '4000': 30,  // Orange
-            '5000': 0,   // Red
-            '6000': 280, // Purple
+            '1000': 200, '2000': 120, '3000': 240,
+            '4000': 30,  '5000': 0,   '6000': 280,
         };
-
-        // Default hue for courses that don't match (e.g., ENGIN)
-        let baseHue = 300; // Magenta as default
-
+        let baseHue = 300;
         const parts = str.split(' ');
         if (parts.length > 1) {
             const courseNum = parseInt(parts[parts.length - 1], 10);
             if (!isNaN(courseNum)) {
                 const level = Math.floor(courseNum / 1000) * 1000;
-                if (level in levelHues) {
-                    baseHue = levelHues[level];
-                }
+                if (level in levelHues) baseHue = levelHues[level];
             }
         }
-
-        // Use a hash of the full string to create slight variations in lightness
         let hash = 0;
         for (let i = 0; i < str.length; i++) {
             hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
-        const lightnessVariation = hash % 15; // Creates a variance of 0-14
-        
-        // Return the HSL color with a fixed base hue and varied lightness
+        const lightnessVariation = hash % 15;
         return `hsl(${baseHue}, ${s}%, ${l - lightnessVariation}%)`;
     }
 
@@ -88,19 +73,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         return { ...course, startMinutes: null, endMinutes: null };
                     }
                     const timeParts = timeString.match(/(\d{1,2}:\d{2})(AM|PM)/);
-                    
                     const [time, ampm] = [timeParts[1], timeParts[2]];
                     let [hour, minute] = time.split(':').map(Number);
-
                     if (ampm === 'PM' && hour !== 12) hour += 12;
                     if (ampm === 'AM' && hour === 12) hour = 0;
-                    
                     const startMinutes = (hour * 60) + minute;
                     const endMinutes = startMinutes + course.duration;
-                    
                     return { ...course, startMinutes, endMinutes };
                 });
-                
                 populateFilters(allCourses);
                 filterAndRedrawCalendar();
             })
@@ -159,12 +139,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function filterAndRedrawCalendar() {
         document.querySelectorAll('.class-event').forEach(event => event.remove());
-
         const selectedInstructor = instructorFilter.value;
         const selectedType = typeFilter.value;
         const selectedLocation = locationFilter.value;
         const selectedCourses = Array.from(document.querySelectorAll('#course-checkboxes input:checked')).map(cb => cb.value);
-
         const filteredCourses = allCourses.filter(course => {
             const instructorMatch = (selectedInstructor === 'all' || (course.instructors && course.instructors.includes(selectedInstructor)));
             const typeMatch = (selectedType === 'all' || course.type === selectedType);
@@ -172,13 +150,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const courseMatch = (selectedCourses.length === 0 || selectedCourses.includes(course.course_number));
             return instructorMatch && typeMatch && courseMatch && locationMatch;
         });
-
         const schedulableCourses = filteredCourses.filter(c => c.startMinutes !== null && c.days && c.days.trim() !== '');
         const unschedulableCourses = filteredCourses.filter(c => c.startMinutes === null || !c.days || c.days.trim() === '');
-
         calculateAndDisplayMetrics(schedulableCourses);
         displayUnscheduledCourses(unschedulableCourses);
-
         Object.values(dayMap).forEach(dayCode => {
             const dayEvents = schedulableCourses
                 .filter(course => course.days.includes(Object.keys(dayMap).find(key => dayMap[key] === dayCode)))
@@ -195,9 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         break;
                     }
                 }
-                if (!placed) {
-                    columns.push([event]);
-                }
+                if (!placed) columns.push([event]);
             });
             const totalColumns = columns.length;
             columns.forEach((column, columnIndex) => {
@@ -231,7 +204,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MODIFIED --- This function now includes the ENGIN prefix check for MEB Usage
     function calculateAndDisplayMetrics(courses) {
         const primeTimeStart = 9 * 60;
         const primeTimeEnd = 14 * 60;
@@ -239,12 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let mwfPrimeTimeMinutes = 0;
         let trPrimeTimeMinutes = 0;
         let dailyMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
-
         courses.forEach(course => {
-            if (!course.duration || !course.days || !course.startMinutes) return;
-
-            // --- THIS IS THE NEW LOGIC FOR METRIC #1 ---
-            // Check for ENGIN prefix before calculating MEB usage
             if (course.course_number.startsWith("ENGIN")) {
                 const courseLocations = (course.location || '').split(';').map(l => l.trim());
                 courseLocations.forEach(loc => {
@@ -253,23 +220,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             }
-
-            // --- The rest of the metrics are still filtered for CH EN courses ---
             if (!course.course_number.startsWith("CH EN")) return;
             const courseNumStr = course.course_number.replace("CH EN", "").trim();
             const courseNum = parseInt(courseNumStr, 10);
             if (isNaN(courseNum) || courseNum < 1000 || courseNum > 5999) return;
-            
+            if (!course.duration || !course.days || !course.startMinutes) return;
             const courseEndMinutes = course.startMinutes + course.duration;
             const overlapStart = Math.max(course.startMinutes, primeTimeStart);
             const overlapEnd = Math.min(courseEndMinutes, primeTimeEnd);
             const primeMinutesForThisCourse = Math.max(0, overlapEnd - overlapStart);
-
             for (const dayChar of course.days) {
                 const dayCode = dayMap[dayChar];
                 if (!dayCode) continue;
                 dailyMinutes[dayCode] += course.duration;
-
                 if (dayChar === 'M' || dayChar === 'W' || dayChar === 'F') {
                     mwfPrimeTimeMinutes += primeMinutesForThisCourse;
                 } else if (dayChar === 'T' || dayChar === 'R') {
@@ -277,41 +240,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
-
         const totalWeeklyMinutes = Object.values(dailyMinutes).reduce((sum, mins) => sum + mins, 0);
         const totalPrimeTimeMinutes = mwfPrimeTimeMinutes + trPrimeTimeMinutes;
         const totalMinutesOutsidePrime = totalWeeklyMinutes - totalPrimeTimeMinutes;
-        
         document.getElementById('metric-meb-1292').textContent = (mebRoomUsageMinutes["MEB 1292"] / 60).toFixed(1);
         document.getElementById('metric-meb-2550').textContent = (mebRoomUsageMinutes["MEB 2550"] / 60).toFixed(1);
         document.getElementById('metric-meb-3520').textContent = (mebRoomUsageMinutes["MEB 3520"] / 60).toFixed(1);
-
         const mwfPrimePercentage = (totalWeeklyMinutes > 0) ? (mwfPrimeTimeMinutes / totalWeeklyMinutes) * 100 : 0;
         const trPrimePercentage = (totalWeeklyMinutes > 0) ? (trPrimeTimeMinutes / totalWeeklyMinutes) * 100 : 0;
-        
         const outsidePrimePercentage = (totalWeeklyMinutes > 0) ? (totalMinutesOutsidePrime / totalWeeklyMinutes) * 100 : 0;
-
         document.getElementById('metric-mwf-prime').textContent = mwfPrimePercentage.toFixed(0);
         document.getElementById('metric-tr-prime').textContent = trPrimePercentage.toFixed(0);
-
         document.getElementById('metric-outside-prime-hrs').textContent = (totalMinutesOutsidePrime / 60).toFixed(1);
         document.getElementById('metric-outside-prime-pct').textContent = outsidePrimePercentage.toFixed(0);
-
         document.getElementById('metric-mo-hrs').textContent = (dailyMinutes.Mo / 60).toFixed(1);
         document.getElementById('metric-tu-hrs').textContent = (dailyMinutes.Tu / 60).toFixed(1);
         document.getElementById('metric-we-hrs').textContent = (dailyMinutes.We / 60).toFixed(1);
         document.getElementById('metric-th-hrs').textContent = (dailyMinutes.Th / 60).toFixed(1);
         document.getElementById('metric-fr-hrs').textContent = (dailyMinutes.Fr / 60).toFixed(1);
-
         document.getElementById('metric-mo-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Mo / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-tu-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Tu / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-we-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.We / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-th-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Th / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-fr-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Fr / totalWeeklyMinutes) * 100 : 0).toFixed(0);
-
         document.getElementById('metric-total-hrs').textContent = (totalWeeklyMinutes / 60).toFixed(1);
     }
     
+    // --- MODIFIED --- This function now has event listeners to manage the tooltip position
     function placeCourseOnCalendar(course, day, width = 100, left = 0) {
         const column = document.querySelector(`.day-content[data-day="${day}"]`);
         if (!column) return;
@@ -347,5 +302,25 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>`;
             
         column.appendChild(eventDiv);
+
+        // --- NEW: Event listeners for smart tooltip positioning ---
+        eventDiv.addEventListener('mouseover', () => {
+            const tooltip = eventDiv.querySelector('.event-tooltip');
+            tooltip.classList.add('tooltip-visible'); // Make it visible to measure its size
+
+            const tooltipRect = tooltip.getBoundingClientRect();
+            const viewportWidth = window.innerWidth;
+
+            // If the tooltip goes off the right edge of the screen...
+            if (tooltipRect.right > viewportWidth) {
+                tooltip.classList.add('tooltip-left'); //...flip it to the left side.
+            }
+        });
+
+        eventDiv.addEventListener('mouseout', () => {
+            const tooltip = eventDiv.querySelector('.event-tooltip');
+            tooltip.classList.remove('tooltip-visible');
+            tooltip.classList.remove('tooltip-left'); // Always remove the left-position class on mouseout
+        });
     }
 });
