@@ -307,3 +307,45 @@ h3 {
 .course-table tr:nth-child(even) {
     background-color: #f9f9f9;
 }
+/* --- Responsive Calendar Styles --- */
+
+.calendar-container {
+    width: 100%;
+    overflow-x: auto; /* This provides a fallback scrollbar if needed */
+}
+
+.calendar-grid {
+    display: grid;
+    /* This creates 6 columns: 
+       - The time column sizes to its content.
+       - The 5 day columns share the remaining space equally. */
+    grid-template-columns: auto repeat(5, 1fr);
+    min-width: 600px; /* Prevents columns from becoming too squished */
+}
+
+.day-column, .time-column {
+    /* Ensures the grid container controls the width */
+    width: auto; 
+}
+
+/* --- Responsive styles for smaller screens (e.g., mobile phones) --- */
+@media (max-width: 800px) {
+    .calendar-grid {
+        /* On small screens, stack the days vertically */
+        grid-template-columns: 1fr; 
+        min-width: 0; /* Remove the minimum width on mobile */
+    }
+
+    .time-column {
+        /* The separate time column is not practical on a vertical layout, so we hide it */
+        display: none; 
+    }
+
+    .day-column {
+        /* Add a border to separate the days when they are stacked */
+        border-bottom: 2px solid #ddd;
+    }
+    .day-column:last-child {
+        border-bottom: none;
+    }
+}
