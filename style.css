@@ -224,3 +224,27 @@ h3 {
     border-bottom: 1px solid #eee;
     padding-bottom: 5px;
 }
+.unscheduled-courses-container {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #fafafa;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+.unscheduled-courses-container h2 {
+    margin-top: 0;
+}
+#unscheduled-courses-list {
+    list-style: none;
+    padding: 0;
+}
+#unscheduled-courses-list li {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+#unscheduled-courses-list li:last-child {
+    border-bottom: none;
+}
+#unscheduled-courses-list strong {
+    color: #333;
+}
