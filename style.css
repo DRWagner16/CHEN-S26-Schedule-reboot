@@ -280,3 +280,8 @@ h3 {
     column-count: 2;
     column-gap: 20px;
 }
+.main-container {
+    display: flex;
+    flex-direction: column; /* This is the key: it stacks children vertically */
+    align-items: center;   /* This will center your content on the page */
+}
