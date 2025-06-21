@@ -21,39 +21,54 @@ document.addEventListener('DOMContentLoaded', () => {
     generateTimeSlots();
     fetchDataAndInitialize();
 
-    instructorFilter.addEventListener('change', filterAndRedrawCalendar);
-    locationFilter.addEventListener('change', filterAndRedrawCalendar);
-    courseCheckboxesContainer.addEventListener('change', filterAndRedrawCalendar);
+    // --- MODIFIED: The event listener for the Instructor filter is now more advanced ---
+    instructorFilter.addEventListener('change', () => {
+        const selectedInstructor = instructorFilter.value;
 
-    // --- MODIFIED: The event listener for the Type filter is now more advanced ---
-    typeFilter.addEventListener('change', () => {
-        const selectedType = typeFilter.value;
-
-        // If user selects "All Types", just redraw without changing checkboxes
-        if (selectedType === 'all') {
+        if (selectedInstructor === 'all') {
             filterAndRedrawCalendar();
             return;
         }
 
-        // When a specific type is chosen, reset the other filters for a clean slate
-        instructorFilter.value = 'all';
+        // When a specific instructor is chosen, reset the other filters
+        typeFilter.value = 'all';
         locationFilter.value = 'all';
 
         // Iterate through all course checkboxes
         document.querySelectorAll('#course-checkboxes input[type="checkbox"]').forEach(cb => {
-            // Find the full course object corresponding to the checkbox
             const course = allCourses.find(c => c.course_number === cb.value);
-            // If the course type matches the selected type, check the box. Otherwise, uncheck it.
+            // Since instructors is a semicolon-separated string, .includes() works perfectly
+            if (course && course.instructors.includes(selectedInstructor)) {
+                cb.checked = true;
+            } else {
+                cb.checked = false;
+            }
+        });
+        
+        filterAndRedrawCalendar();
+    });
+
+    typeFilter.addEventListener('change', () => {
+        const selectedType = typeFilter.value;
+        if (selectedType === 'all') {
+            filterAndRedrawCalendar();
+            return;
+        }
+        instructorFilter.value = 'all';
+        locationFilter.value = 'all';
+        document.querySelectorAll('#course-checkboxes input[type="checkbox"]').forEach(cb => {
+            const course = allCourses.find(c => c.course_number === cb.value);
             if (course && course.type === selectedType) {
                 cb.checked = true;
             } else {
                 cb.checked = false;
             }
         });
-
-        // Redraw the calendar and metrics with the new selection
         filterAndRedrawCalendar();
     });
+    
+    locationFilter.addEventListener('change', filterAndRedrawCalendar);
+    courseCheckboxesContainer.addEventListener('change', filterAndRedrawCalendar);
 
     resetBtn.addEventListener('click', () => {
         instructorFilter.value = 'all';
