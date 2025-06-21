@@ -32,26 +32,18 @@ document.addEventListener('DOMContentLoaded', () => {
         filterAndRedrawCalendar();
     });
 
-    function stringToHslColor(str, s = 65, l = 75) {
-        const levelHues = {
-            '1000': 200, '2000': 120, '3000': 240,
-            '4000': 30,  '5000': 0,   '6000': 280,
+    // --- MODIFIED --- This function is new and assigns a specific color based on course type
+    function typeToHslColor(courseType) {
+        // Define a consistent color for each type of course
+        const typeColorMap = {
+            'Lecture':    'hsl(210, 65%, 70%)', // Blue
+            'Lab':        'hsl(120, 60%, 65%)', // Green
+            'Seminar':    'hsl(50, 75%, 70%)',  // Yellow
+            'Discussion': 'hsl(280, 50%, 75%)', // Purple
+            'Online':     'hsl(0, 0%, 75%)',      // Gray
         };
-        let baseHue = 300;
-        const parts = str.split(' ');
-        if (parts.length > 1) {
-            const courseNum = parseInt(parts[parts.length - 1], 10);
-            if (!isNaN(courseNum)) {
-                const level = Math.floor(courseNum / 1000) * 1000;
-                if (level in levelHues) baseHue = levelHues[level];
-            }
-        }
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-            hash = str.charCodeAt(i) + ((hash << 5) - hash);
-        }
-        const lightnessVariation = hash % 10;
-        return `hsl(${baseHue}, ${s}%, ${l - lightnessVariation}%)`;
+        // Return the color for the type, or a default light gray if the type is not found
+        return typeColorMap[courseType] || 'hsl(0, 0%, 80%)';
     }
 
     function generateTimeSlots() {
@@ -81,17 +73,27 @@ document.addEventListener('DOMContentLoaded', () => {
                     const endMinutes = startMinutes + course.duration;
                     return { ...course, startMinutes, endMinutes };
                 });
+                
                 populateFilters(allCourses);
                 filterAndRedrawCalendar();
             })
             .catch(error => console.error('[FATAL] Error loading schedule data:', error));
     }
     
+    // --- MODIFIED --- This function now builds the color map based on course type
     function populateFilters(courses) {
-        const uniqueCourses = [...new Set(courses.map(course => course.course_number))].sort();
-        uniqueCourses.forEach(courseName => {
-            courseColorMap.set(courseName, stringToHslColor(courseName));
+        // --- This section is new ---
+        // Build the color map based on the course type for each unique course number
+        courseColorMap.clear();
+        courses.forEach(course => {
+            if (!courseColorMap.has(course.course_number)) {
+                courseColorMap.set(course.course_number, typeToHslColor(course.type));
+            }
         });
+        // --- End new section ---
+
+        const uniqueCourses = [...new Set(courses.map(course => course.course_number))].sort();
+        
         const allInstructorNames = courses.flatMap(course => course.instructors.split(';').map(name => name.trim()));
         const uniqueInstructors = [...new Set(allInstructorNames)].sort();
         uniqueInstructors.forEach(name => {
@@ -204,7 +206,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MODIFIED --- This function now includes CH EN and ENGIN courses in the MEB usage calculation
     function calculateAndDisplayMetrics(courses) {
         const primeTimeStart = 9 * 60;
         const primeTimeEnd = 14 * 60;
@@ -212,79 +213,58 @@ document.addEventListener('DOMContentLoaded', () => {
         let mwfPrimeTimeMinutes = 0;
         let trPrimeTimeMinutes = 0;
         let dailyMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
-
         courses.forEach(course => {
-            // This is a basic check to ensure the course has scheduling data before any calculation
-            if (!course.duration || !course.days || !course.startMinutes) return;
-
-            // --- THIS IS THE MODIFIED LOGIC FOR MEB USAGE ---
-            // It now checks for either "CH EN" or "ENGIN" prefixes
             if (course.course_number.startsWith("CH EN") || course.course_number.startsWith("ENGIN")) {
                 const courseLocations = (course.location || '').split(';').map(l => l.trim());
                 courseLocations.forEach(loc => {
                     if (loc in mebRoomUsageMinutes) {
-                        // Add duration for each day the course occurs
                         mebRoomUsageMinutes[loc] += course.duration * course.days.length;
                     }
                 });
             }
-
-            // --- The rest of the metrics are still filtered for specific CH EN courses ---
-            // This block is now separate from the MEB calculation above
-            if (course.course_number.startsWith("CH EN")) {
-                const courseNumStr = course.course_number.replace("CH EN", "").trim();
-                const courseNum = parseInt(courseNumStr, 10);
-                if (!isNaN(courseNum) && courseNum >= 1000 && courseNum <= 5999) {
-                    const courseEndMinutes = course.startMinutes + course.duration;
-                    const overlapStart = Math.max(course.startMinutes, primeTimeStart);
-                    const overlapEnd = Math.min(courseEndMinutes, primeTimeEnd);
-                    const primeMinutesForThisCourse = Math.max(0, overlapEnd - overlapStart);
-
-                    for (const dayChar of course.days) {
-                        const dayCode = dayMap[dayChar];
-                        if (!dayCode) continue;
-                        dailyMinutes[dayCode] += course.duration;
-
-                        if (dayChar === 'M' || dayChar === 'W' || dayChar === 'F') {
-                            mwfPrimeTimeMinutes += primeMinutesForThisCourse;
-                        } else if (dayChar === 'T' || dayChar === 'R') {
-                            trPrimeTimeMinutes += primeMinutesForThisCourse;
-                        }
-                    }
+            if (!course.course_number.startsWith("CH EN")) return;
+            const courseNumStr = course.course_number.replace("CH EN", "").trim();
+            const courseNum = parseInt(courseNumStr, 10);
+            if (isNaN(courseNum) || courseNum < 1000 || courseNum > 5999) return;
+            if (!course.duration || !course.days || !course.startMinutes) return;
+            const courseEndMinutes = course.startMinutes + course.duration;
+            const overlapStart = Math.max(course.startMinutes, primeTimeStart);
+            const overlapEnd = Math.min(courseEndMinutes, primeTimeEnd);
+            const primeMinutesForThisCourse = Math.max(0, overlapEnd - overlapStart);
+            for (const dayChar of course.days) {
+                const dayCode = dayMap[dayChar];
+                if (!dayCode) continue;
+                dailyMinutes[dayCode] += course.duration;
+                if (dayChar === 'M' || dayChar === 'W' || dayChar === 'F') {
+                    mwfPrimeTimeMinutes += primeMinutesForThisCourse;
+                } else if (dayChar === 'T' || dayChar === 'R') {
+                    trPrimeTimeMinutes += primeMinutesForThisCourse;
                 }
             }
         });
-
         const totalWeeklyMinutes = Object.values(dailyMinutes).reduce((sum, mins) => sum + mins, 0);
         const totalPrimeTimeMinutes = mwfPrimeTimeMinutes + trPrimeTimeMinutes;
         const totalMinutesOutsidePrime = totalWeeklyMinutes - totalPrimeTimeMinutes;
-        
         document.getElementById('metric-meb-1292').textContent = (mebRoomUsageMinutes["MEB 1292"] / 60).toFixed(1);
         document.getElementById('metric-meb-2550').textContent = (mebRoomUsageMinutes["MEB 2550"] / 60).toFixed(1);
         document.getElementById('metric-meb-3520').textContent = (mebRoomUsageMinutes["MEB 3520"] / 60).toFixed(1);
-
         const mwfPrimePercentage = (totalWeeklyMinutes > 0) ? (mwfPrimeTimeMinutes / totalWeeklyMinutes) * 100 : 0;
         const trPrimePercentage = (totalWeeklyMinutes > 0) ? (trPrimeTimeMinutes / totalWeeklyMinutes) * 100 : 0;
-        
         const outsidePrimePercentage = (totalWeeklyMinutes > 0) ? (totalMinutesOutsidePrime / totalWeeklyMinutes) * 100 : 0;
-
         document.getElementById('metric-mwf-prime').textContent = mwfPrimePercentage.toFixed(0);
         document.getElementById('metric-tr-prime').textContent = trPrimePercentage.toFixed(0);
         document.getElementById('metric-outside-prime-hrs').textContent = (totalMinutesOutsidePrime / 60).toFixed(1);
         document.getElementById('metric-outside-prime-pct').textContent = outsidePrimePercentage.toFixed(0);
-
         document.getElementById('metric-mo-hrs').textContent = (dailyMinutes.Mo / 60).toFixed(1);
         document.getElementById('metric-tu-hrs').textContent = (dailyMinutes.Tu / 60).toFixed(1);
         document.getElementById('metric-we-hrs').textContent = (dailyMinutes.We / 60).toFixed(1);
         document.getElementById('metric-th-hrs').textContent = (dailyMinutes.Th / 60).toFixed(1);
         document.getElementById('metric-fr-hrs').textContent = (dailyMinutes.Fr / 60).toFixed(1);
-
         document.getElementById('metric-mo-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Mo / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-tu-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Tu / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-we-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.We / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-th-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Th / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-fr-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Fr / totalWeeklyMinutes) * 100 : 0).toFixed(0);
-
         document.getElementById('metric-total-hrs').textContent = (totalWeeklyMinutes / 60).toFixed(1);
     }
     
@@ -307,7 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         const color = courseColorMap.get(course.course_number) || '#a3c4f3';
         eventDiv.style.backgroundColor = color;
-        eventDiv.style.borderColor = `hsl(${parseInt(color.substring(4))}, 50%, 60%)`;
+        eventDiv.style.borderColor = color; // Use same color for border for a solid look
 
         eventDiv.innerHTML = `
             <div class="event-title">${course.course_number}</div>
