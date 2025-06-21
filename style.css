@@ -272,3 +272,10 @@ h3 {
 #unscheduled-courses-list strong {
     color: #333;
 }
+#unscheduled-courses-list {
+    list-style: none;
+    padding: 0;
+    /* --- NEW: Add these two lines for the column layout --- */
+    column-count: 2;
+    column-gap: 20px;
+}
