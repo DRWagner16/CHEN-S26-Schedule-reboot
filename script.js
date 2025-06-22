@@ -107,8 +107,8 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let i = 0; i < str.length; i++) {
             hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
-        const hueVariation = (hash % 21) - 10;
-        return `hsl(${baseHue}, ${saturation + hueVariation}%, 70%)`;
+        const hueVariation = (hash % 21) - 20;
+        return `hsl(${baseHue}, ${saturation + hueVariation}%, {70 + hueVariation}%)`;
     }
 
     function generateTimeSlots() {
