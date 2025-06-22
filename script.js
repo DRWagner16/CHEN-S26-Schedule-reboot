@@ -21,30 +21,22 @@ document.addEventListener('DOMContentLoaded', () => {
     generateTimeSlots();
     fetchDataAndInitialize();
 
-    // --- MODIFIED: The event listener for the Instructor filter is now more advanced ---
     instructorFilter.addEventListener('change', () => {
         const selectedInstructor = instructorFilter.value;
-
         if (selectedInstructor === 'all') {
             filterAndRedrawCalendar();
             return;
         }
-
-        // When a specific instructor is chosen, reset the other filters
         typeFilter.value = 'all';
         locationFilter.value = 'all';
-
-        // Iterate through all course checkboxes
         document.querySelectorAll('#course-checkboxes input[type="checkbox"]').forEach(cb => {
             const course = allCourses.find(c => c.course_number === cb.value);
-            // Since instructors is a semicolon-separated string, .includes() works perfectly
             if (course && course.instructors.includes(selectedInstructor)) {
                 cb.checked = true;
             } else {
                 cb.checked = false;
             }
         });
-        
         filterAndRedrawCalendar();
     });
 
@@ -66,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         filterAndRedrawCalendar();
     });
-    
+
     locationFilter.addEventListener('change', filterAndRedrawCalendar);
     courseCheckboxesContainer.addEventListener('change', filterAndRedrawCalendar);
 
@@ -77,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('#course-checkboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
         filterAndRedrawCalendar();
     });
-    
+
     showAllChenBtn.addEventListener('click', () => {
         instructorFilter.value = 'all';
         typeFilter.value = 'all';
@@ -92,23 +84,39 @@ document.addEventListener('DOMContentLoaded', () => {
         filterAndRedrawCalendar();
     });
 
+    // --- MODIFIED --- This function now has greater variation in saturation and lightness.
     function courseToHslColor(course) {
         const typeBaseHues = {
-            'Year 1': 103, 'Year 2': 180, 'Year 3': 41,
-            'Year 4': 0, 'Elective': 280, 'Graduate': 30, 'Other': 196,
+            'Year 1': 210,   // Blue
+            'Year 2': 120,   // Green
+            'Year 3': 50,    // Yellow/Gold
+            'Year 4': 0,     // Red
+            'Elective': 280, // Purple
+            'Graduate': 30,  // Orange
+            'Other': 300,    // Magenta
         };
+        
         let baseHue = typeBaseHues[course.type] ?? 0;
-        let saturation = 65;
+        
+        // Default to gray for unknown types
         if (typeBaseHues[course.type] === undefined) {
-            saturation = 0;
+            baseHue = 0;
         }
+
         let hash = 0;
         const str = course.course_number;
         for (let i = 0; i < str.length; i++) {
             hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
-        const hueVariation = (hash % 21) - 20;
-        return `hsl(${baseHue}, ${saturation + hueVariation}%, 70%)`;
+
+        // Generate saturation and lightness from the hash for more variety
+        const saturation = 55 + (Math.abs(hash) % 30); // Range: 55-84%
+        const lightness = 65 + (Math.abs(hash >> 8) % 15); // Range: 65-79%
+
+        // If the type was unknown, force saturation to 0 for a grayscale color
+        const finalSaturation = typeBaseHues[course.type] === undefined ? 0 : saturation;
+
+        return `hsl(${baseHue}, ${finalSaturation}%, ${lightness}%)`;
     }
 
     function generateTimeSlots() {
@@ -138,6 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const endMinutes = startMinutes + course.duration;
                     return { ...course, startMinutes, endMinutes };
                 });
+                
                 populateFilters(allCourses);
                 filterAndRedrawCalendar();
             })
