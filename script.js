@@ -110,8 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Generate saturation and lightness from the hash for more variety
-        const saturation = 50 + (Math.abs(hash) % 45); // Range: 55-84%
-        const lightness = 50 + (Math.abs(hash >> 8) % 45); // Range: 65-79%
+        const saturation = 50 + (Math.abs(hash) % 35); // Range: 55-84%
+        const lightness = 50 + (Math.abs(hash >> 8) % 35); // Range: 65-79%
 
         // If the type was unknown, force saturation to 0 for a grayscale color
         const finalSaturation = typeBaseHues[course.type] === undefined ? 0 : saturation;
