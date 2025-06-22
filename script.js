@@ -87,13 +87,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- MODIFIED --- This function now has greater variation in saturation and lightness.
     function courseToHslColor(course) {
         const typeBaseHues = {
-            'Year 1': 210,   // Blue
-            'Year 2': 120,   // Green
-            'Year 3': 50,    // Yellow/Gold
-            'Year 4': 0,     // Red
-            'Elective': 280, // Purple
+            'Year 1': 103,   // Mountain Green
+            'Year 2': 180,   // Great Salt Lake
+            'Year 3': 41,    // Wasatch Sunrise
+            'Year 4': 0,     // Utah Red
+            'Elective': 196, // Granite Peak
             'Graduate': 30,  // Orange
-            'Other': 300,    // Magenta
+            'Other': 230,    // Blue
         };
         
         let baseHue = typeBaseHues[course.type] ?? 0;
@@ -110,8 +110,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Generate saturation and lightness from the hash for more variety
-        const saturation = 55 + (Math.abs(hash) % 30); // Range: 55-84%
-        const lightness = 65 + (Math.abs(hash >> 8) % 15); // Range: 65-79%
+        const saturation = 50 + (Math.abs(hash) % 45); // Range: 55-84%
+        const lightness = 50 + (Math.abs(hash >> 8) % 45); // Range: 65-79%
 
         // If the type was unknown, force saturation to 0 for a grayscale color
         const finalSaturation = typeBaseHues[course.type] === undefined ? 0 : saturation;
