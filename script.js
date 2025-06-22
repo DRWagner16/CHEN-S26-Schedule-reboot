@@ -94,8 +94,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function courseToHslColor(course) {
         const typeBaseHues = {
-            'Year 1': 210, 'Year 2': 120, 'Year 3': 50,
-            'Year 4': 0, 'Elective': 280, 'Graduate': 30, 'Other': 300,
+            'Year 1': 103, 'Year 2': 180, 'Year 3': 41,
+            'Year 4': 0, 'Elective': 280, 'Graduate': 30, 'Other': 196,
         };
         let baseHue = typeBaseHues[course.type] ?? 0;
         let saturation = 65;
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
             hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
         const hueVariation = (hash % 21) - 10;
-        return `hsl(${baseHue + hueVariation}, ${saturation}%, 70%)`;
+        return `hsl(${baseHue}, ${saturation + hueVariation}%, 70%)`;
     }
 
     function generateTimeSlots() {
