@@ -382,24 +382,24 @@ document.addEventListener('DOMContentLoaded', () => {
             
         column.appendChild(eventDiv);
         
-        // --- THIS IS THE CRITICAL LOGIC THAT MAKES THE TOOLTIP WORK ---
+        // --- NEW: Event listeners for smart tooltip positioning ---
         eventDiv.addEventListener('mouseover', () => {
             const tooltip = eventDiv.querySelector('.event-tooltip');
-            tooltip.classList.add('tooltip-visible'); // Make it visible to measure
+            tooltip.classList.add('tooltip-visible'); // Make it visible so we can measure it
     
             const tooltipRect = tooltip.getBoundingClientRect();
             const viewportWidth = window.innerWidth;
     
-            // If tooltip goes off the right edge, flip it left
+            // Check if the tooltip's right edge is outside the visible window
             if (tooltipRect.right > viewportWidth) {
-                tooltip.classList.add('tooltip-left');
+                tooltip.classList.add('tooltip-left'); // If so, apply the class to flip it left
             }
         });
     
         eventDiv.addEventListener('mouseout', () => {
             const tooltip = eventDiv.querySelector('.event-tooltip');
             tooltip.classList.remove('tooltip-visible');
-            tooltip.classList.remove('tooltip-left'); // Always reset
+            tooltip.classList.remove('tooltip-left'); // Always remove the flip class on mouse out
         });
     }
 });
