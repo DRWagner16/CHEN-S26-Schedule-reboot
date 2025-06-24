@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const color = courseColorMap.get(course.course_number) || '#a3c4f3';
         eventDiv.style.backgroundColor = color;
         eventDiv.style.borderColor = color;
-
+    
         eventDiv.innerHTML = `
             <div class="event-title">${course.course_number}</div>
             <div class="event-tooltip">
@@ -382,20 +382,24 @@ document.addEventListener('DOMContentLoaded', () => {
             
         column.appendChild(eventDiv);
         
+        // --- THIS IS THE CRITICAL LOGIC THAT MAKES THE TOOLTIP WORK ---
         eventDiv.addEventListener('mouseover', () => {
             const tooltip = eventDiv.querySelector('.event-tooltip');
-            tooltip.classList.add('tooltip-visible');
+            tooltip.classList.add('tooltip-visible'); // Make it visible to measure
+    
             const tooltipRect = tooltip.getBoundingClientRect();
             const viewportWidth = window.innerWidth;
+    
+            // If tooltip goes off the right edge, flip it left
             if (tooltipRect.right > viewportWidth) {
                 tooltip.classList.add('tooltip-left');
             }
         });
-
+    
         eventDiv.addEventListener('mouseout', () => {
             const tooltip = eventDiv.querySelector('.event-tooltip');
             tooltip.classList.remove('tooltip-visible');
-            tooltip.classList.remove('tooltip-left');
+            tooltip.classList.remove('tooltip-left'); // Always reset
         });
     }
 });
