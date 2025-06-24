@@ -1,6 +1,6 @@
 [
     {
-        "course_number": "CH EN 1703-001",
+        "course_number": "CH EN 1703",
         "instructors": "Holmes",
         "days": "TR",
         "time_of_day": "09:10AM-10:30AM",
@@ -11,7 +11,7 @@
         "anticipated_enrollment": 18
     },
     {
-        "course_number": "CH EN 1703-001",
+        "course_number": "CH EN 1703",
         "instructors": "Holmes",
         "days": "R",
         "time_of_day": "10:45AM-11:35AM",
@@ -72,7 +72,7 @@
         "time_of_day": "02:00PM-03:20PM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Year 2",
+        "type": "Year 2; CLSS",
         "notes": "-",
         "anticipated_enrollment": 60
     },
