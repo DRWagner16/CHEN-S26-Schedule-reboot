@@ -373,7 +373,7 @@ h3 {
     position: relative; 
     
     /* This creates the repeating horizontal lines */
-    background-image: linear-gradient(to bottom, #e8e8e8 2px, transparent 1px);
+    background-image: linear-gradient(to bottom, #e8e8e8 1px, transparent 1px);
     background-size: 100% 60px; /* Repeats a 60px tall block, with a 1px line at the top */
 }
 .intermediate-values {
