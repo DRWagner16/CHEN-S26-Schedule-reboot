@@ -349,6 +349,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function placeCourseOnCalendar(course, day, width = 100, left = 0) {
         const column = document.querySelector(`.day-content[data-day="${day}"]`);
         if (!column) return;
+    
+        // This is a reference to the single, global tooltip you added to your HTML
+        const tooltip = document.getElementById('course-tooltip');
         
         const minutesSinceCalendarStart = course.startMinutes - (START_HOUR * 60);
         const topPosition = minutesSinceCalendarStart;
@@ -367,9 +370,15 @@ document.addEventListener('DOMContentLoaded', () => {
         eventDiv.style.backgroundColor = color;
         eventDiv.style.borderColor = color;
     
-        eventDiv.innerHTML = `
-            <div class="event-title">${course.course_number}</div>
-            <div class="event-tooltip">
+        // The course block no longer contains its own tooltip
+        eventDiv.innerHTML = `<div class="event-title">${course.course_number}</div>`;
+                
+        column.appendChild(eventDiv);
+        
+        // --- NEW MOUSE EVENTS FOR FLOATING TOOLTIP ---
+        eventDiv.addEventListener('mouseover', () => {
+            // When hovering, populate the global tooltip with this event's data
+            tooltip.innerHTML = `
                 <strong>Course:</strong> ${course.course_number}<br>
                 <strong>Instructor:</strong> ${course.instructors}<br>
                 <strong>Time:</strong> ${course.time_of_day}<br>
@@ -378,28 +387,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 <strong>Duration:</strong> ${course.duration} min<br>
                 ${course.notes ? `<strong>Notes:</strong> ${course.notes}<br>` : ''}
                 ${course.anticipated_enrollment ? `<strong>Anticipated Enrollment:</strong> ${course.anticipated_enrollment}` : ''}
-            </div>`;
-            
-        column.appendChild(eventDiv);
-        
-        // --- NEW: Event listeners for smart tooltip positioning ---
-        eventDiv.addEventListener('mouseover', () => {
-            const tooltip = eventDiv.querySelector('.event-tooltip');
-            tooltip.classList.add('tooltip-visible'); // Make it visible so we can measure it
-    
-            const tooltipRect = tooltip.getBoundingClientRect();
-            const viewportWidth = window.innerWidth;
-    
-            // Check if the tooltip's right edge is outside the visible window
-            if (tooltipRect.right > viewportWidth) {
-                tooltip.classList.add('tooltip-left'); // If so, apply the class to flip it left
-            }
+            `;
+            // And make it visible
+            tooltip.style.display = 'block';
         });
     
         eventDiv.addEventListener('mouseout', () => {
-            const tooltip = eventDiv.querySelector('.event-tooltip');
-            tooltip.classList.remove('tooltip-visible');
-            tooltip.classList.remove('tooltip-left'); // Always remove the flip class on mouse out
+            // When the mouse leaves, hide the tooltip
+            tooltip.style.display = 'none';
+            tooltip.innerHTML = ''; // Clear the content
+        });
+    
+        eventDiv.addEventListener('mousemove', (e) => {
+            // Make the tooltip follow the cursor with a slight offset
+            tooltip.style.left = e.pageX + 15 + 'px';
+            tooltip.style.top = e.pageY + 15 + 'px';
         });
     }
 });
