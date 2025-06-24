@@ -358,3 +358,11 @@ h3 {
     background-image: linear-gradient(to bottom, #e8e8e8 1px, transparent 1px);
     background-size: 100% 60px; /* Repeats a 60px tall block, with a 1px line at the top */
 }
+.intermediate-values {
+    margin-top: 15px;
+    font-size: 0.8em;
+    color: #666;
+}
+.metric-item-small {
+    margin-right: 15px;
+}
