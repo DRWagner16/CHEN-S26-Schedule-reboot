@@ -1,11 +1,13 @@
 name: Update Schedule Data from Google Sheet
 
 on:
-  # This allows you to run the workflow manually from the Actions tab
   workflow_dispatch:
-  # This runs the workflow automatically every day at 5:00 UTC
   schedule:
     - cron: '0 5 * * *'
+
+# --- NEW: Grant write permissions to the job ---
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -32,7 +34,7 @@ jobs:
       - name: Run script to convert Google Sheet to JSON
         env:
           GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-        run: python convert_excel.py # The script name
+        run: python convert_excel.py
 
       # Step 5: Commit the new JSON file back to the repository
       - name: Commit and push if there are changes
