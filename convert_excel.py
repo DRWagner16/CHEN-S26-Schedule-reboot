@@ -29,8 +29,8 @@ def convert_gsheet_to_json():
     Reads data from a Google Sheet, processes it, and saves it to a JSON file.
     """
     ########## UPDATE THESE VALUES FOR YOUR SETUP ##########
-    google_sheet_name = 'Spring 2026 Schedule Data' 
-    worksheet_name = 'Sheet1' 
+    google_sheet_name = 'Teaching Assignments 2025-2026' 
+    worksheet_name = 'S26CLSS' 
     output_json_file = 'S26schedule.json'
     ########################################################
     
