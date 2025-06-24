@@ -99,9 +99,8 @@ h1, h2, h3 {
 .time-column {
     border-left: none;
 }
-/* --- THIS RULE IS CORRECTED --- */
 .day-content {
-    position: relative; /* This IS the correct container for positioning */
+    position: relative;
     flex-grow: 1;
     background-image: linear-gradient(to bottom, #e8e8e8 1px, transparent 1px);
     background-size: 100% 60px;
@@ -122,9 +121,8 @@ h1, h2, h3 {
     font-size: 12px; 
     color: #777;
 }
-/* --- THIS RULE IS CORRECTED --- */
 .class-event { 
-    position: absolute; /* The course event itself MUST be positioned absolutely */
+    position: absolute;
     border-radius: 4px; 
     padding: 4px; 
     box-sizing: border-box; 
@@ -132,7 +130,7 @@ h1, h2, h3 {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
     z-index: 10; 
     cursor: pointer; 
-    overflow: hidden;
+    /* The "overflow: hidden;" property was removed from here */
 }
 .event-title { 
     font-weight: bold; 
@@ -249,4 +247,4 @@ h1, h2, h3 {
         flex-direction: column;
         align-items: stretch;
     }
-
+}
