@@ -122,7 +122,8 @@ h1, h2, h3 {
     color: #777;
 }
 .class-event { 
-    position: absolute;
+    position: relative; /* THIS IS THE CRITICAL FIX */
+    background-color: #a3c4f3; 
     border-radius: 4px; 
     padding: 4px; 
     box-sizing: border-box; 
