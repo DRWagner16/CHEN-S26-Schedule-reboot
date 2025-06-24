@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         filterAndRedrawCalendar();
     });
 
+    // --- MODIFIED: This listener now handles multiple types per course ---
     typeFilter.addEventListener('change', () => {
         const selectedType = typeFilter.value;
         if (selectedType === 'all') { filterAndRedrawCalendar(); return; }
@@ -40,7 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
         locationFilter.value = 'all';
         document.querySelectorAll('#course-checkboxes input[type="checkbox"]').forEach(cb => {
             const course = allCourses.find(c => c.course_number === cb.value);
-            cb.checked = (course && course.type === selectedType);
+            // Check if the selected type is included in the course's type string
+            cb.checked = (course && course.type && course.type.includes(selectedType));
         });
         filterAndRedrawCalendar();
     });
@@ -66,16 +68,23 @@ document.addEventListener('DOMContentLoaded', () => {
         filterAndRedrawCalendar();
     });
 
+    // --- MODIFIED: This function now uses the FIRST type listed for coloring ---
     function courseToHslColor(course) {
         const typeBaseHues = {
             'Year 1': 210, 'Year 2': 120, 'Year 3': 50,
             'Year 4': 0, 'Elective': 280, 'Graduate': 30, 'Other': 300,
         };
-        let baseHue = typeBaseHues[course.type] ?? 0;
+        
+        // Use the first type in the list for coloring
+        const primaryType = (course.type || '').split(';')[0].trim();
+        
+        let baseHue = typeBaseHues[primaryType] ?? 0;
         let saturation = 65;
-        if (typeBaseHues[course.type] === undefined) {
+        
+        if (typeBaseHues[primaryType] === undefined) {
             saturation = 0;
         }
+
         let hash = 0;
         const str = course.course_number;
         for (let i = 0; i < str.length; i++) {
@@ -118,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('[FATAL] Error loading schedule data:', error));
     }
     
+    // --- MODIFIED: This function now populates the Type filter from multiple types ---
     function populateFilters(courses) {
         courseColorMap.clear();
         courses.forEach(course => {
@@ -126,7 +136,8 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         const uniqueCourses = [...new Set(courses.map(course => course.course_number))].sort();
-        const allInstructorNames = courses.flatMap(course => course.instructors.split(';').map(name => name.trim()));
+        
+        const allInstructorNames = courses.flatMap(course => (course.instructors || '').split(';').map(name => name.trim()));
         const uniqueInstructors = [...new Set(allInstructorNames)].sort();
         uniqueInstructors.forEach(name => {
             if (name && name.toLowerCase() !== 'nan') {
@@ -136,7 +147,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 instructorFilter.appendChild(option);
             }
         });
-        const uniqueTypes = [...new Set(courses.map(course => course.type))].sort();
+
+        // This logic is now identical to how instructors and locations are handled
+        const allTypeNames = courses.flatMap(course => (course.type || '').split(';').map(name => name.trim()));
+        const uniqueTypes = [...new Set(allTypeNames)].sort();
         uniqueTypes.forEach(typeName => {
             if (typeName && typeName.toLowerCase() !== 'nan') {
                 const option = document.createElement('option');
@@ -145,6 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 typeFilter.appendChild(option);
             }
         });
+
         const allLocationNames = courses.flatMap(course => (course.location || '').split(';').map(name => name.trim()));
         const uniqueLocations = [...new Set(allLocationNames)].sort();
         uniqueLocations.forEach(locationName => {
@@ -171,18 +186,21 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- MODIFIED: The main filtering logic now handles multiple types ---
     function filterAndRedrawCalendar() {
         const selectedInstructor = instructorFilter.value;
         const selectedType = typeFilter.value;
         const selectedLocation = locationFilter.value;
         const selectedCourses = Array.from(document.querySelectorAll('#course-checkboxes input:checked')).map(cb => cb.value);
+        
         const filteredCourses = allCourses.filter(course => {
             const instructorMatch = (selectedInstructor === 'all' || (course.instructors && course.instructors.includes(selectedInstructor)));
-            const typeMatch = (selectedType === 'all' || course.type === selectedType);
+            const typeMatch = (selectedType === 'all' || (course.type && course.type.includes(selectedType)));
             const locationMatch = (selectedLocation === 'all' || (course.location && course.location.includes(selectedLocation)));
             const courseMatch = (selectedCourses.length === 0 || selectedCourses.includes(course.course_number));
             return instructorMatch && typeMatch && courseMatch && locationMatch;
         });
+        
         const schedulableCourses = filteredCourses.filter(c => c.startMinutes !== null && c.days && c.days.trim() !== '');
         const unschedulableCourses = filteredCourses.filter(c => c.startMinutes === null || !c.days || c.days.trim() === '');
         
@@ -266,19 +284,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MODIFIED --- This function has the final metric definitions
     function calculateAndDisplayMetrics(courses) {
         const primeTimeStart = 9 * 60;
         const primeTimeEnd = 13 * 60 + 59;
-        
         let mebRoomUsageMinutes = { "MEB 1292": 0, "MEB 2550": 0, "MEB 3520": 0 };
         let dailyMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
-        
         let mwfPrimeTimeCourseCount = 0;
         let trPrimeTimeCourseCount = 0;
         let mfPrimeTimeCourseCount = 0;
         
-        // --- NEW: First, find the unique set of CH EN courses to use as the denominator ---
         const uniqueChenCourses = new Set();
         courses.forEach(course => {
             if (course.course_number.startsWith("CH EN")) {
@@ -290,13 +304,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         const totalSchedulableChenCourses = uniqueChenCourses.size;
-        // --- END NEW ---
 
-        // Loop through all events to calculate the numerators and other metrics
         courses.forEach(course => {
             if (!course.duration || !course.days || !course.startMinutes) return;
-
-            // MEB Room usage (for CH EN or ENGIN)
             if (course.course_number.startsWith("CH EN") || course.course_number.startsWith("ENGIN")) {
                 const courseLocations = (course.location || '').split(';').map(l => l.trim());
                 courseLocations.forEach(loc => {
@@ -305,55 +315,31 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             }
-
-            // --- The rest of the metrics are still filtered for specific CH EN courses ---
-            if (!course.course_number.startsWith("CH EN")) return;
-            const courseNumStr = course.course_number.replace("CH EN", "").trim();
-            const courseNum = parseInt(courseNumStr, 10);
-            if (isNaN(courseNum) || courseNum < 1000 || courseNum > 5999) return;
-            
-            // This course is a valid undergrad CH EN course
-            const startsInPrimeTime = course.startMinutes >= primeTimeStart && course.startMinutes <= primeTimeEnd;
-            if (startsInPrimeTime) {
-                // We use a Set to only count each unique course once for the M-F total
-                // This will be handled after the loop. For now, we just check day patterns.
-                const isMwfCourse = course.days.includes('M') || course.days.includes('W') || course.days.includes('F');
-                const isTrCourse = course.days.includes('T') || course.days.includes('R');
-                
-                if (isMwfCourse) mwfPrimeTimeCourseCount++;
-                if (isTrCourse) trPrimeTimeCourseCount++;
-            }
-            
-            // Calculate daily hours for the summary table
-            for (const dayChar of course.days) {
-                const dayCode = dayMap[dayChar];
-                if (dayCode) {
-                    dailyMinutes[dayCode] += course.duration;
+            if (course.course_number.startsWith("CH EN")) {
+                const courseNumStr = course.course_number.replace("CH EN", "").trim();
+                const courseNum = parseInt(courseNumStr, 10);
+                if (!isNaN(courseNum) && courseNum >= 1000 && courseNum <= 5999) {
+                    const startsInPrimeTime = course.startMinutes >= primeTimeStart && course.startMinutes <= primeTimeEnd;
+                    if (startsInPrimeTime) {
+                        mfPrimeTimeCourseCount++;
+                        const isMwfCourse = course.days.includes('M') || course.days.includes('W') || course.days.includes('F');
+                        const isTrCourse = course.days.includes('T') || course.days.includes('R');
+                        if (isMwfCourse) mwfPrimeTimeCourseCount++;
+                        if (isTrCourse) trPrimeTimeCourseCount++;
+                    }
+                    for (const dayChar of course.days) {
+                        const dayCode = dayMap[dayChar];
+                        if (dayCode) dailyMinutes[dayCode] += course.duration;
+                    }
                 }
             }
         });
 
-        // --- Post-loop calculations for Prime Time ---
-        // To get an accurate M-F prime time count without double-counting, we find all unique courses
-        // that start in prime time.
-        const primeTimeCourses = new Set();
-        courses.forEach(course => {
-            if (uniqueChenCourses.has(course.course_number)) { // Ensure it's a course we care about
-                if (course.startMinutes >= primeTimeStart && course.startMinutes <= primeTimeEnd) {
-                    primeTimeCourses.add(course.course_number);
-                }
-            }
-        });
-        mfPrimeTimeCourseCount = primeTimeCourses.size;
-
-        // --- Final Calculations & Display ---
         const totalWeeklyMinutes = Object.values(dailyMinutes).reduce((sum, mins) => sum + mins, 0);
-
         document.getElementById('metric-meb-1292').textContent = (mebRoomUsageMinutes["MEB 1292"] / 60).toFixed(1);
         document.getElementById('metric-meb-2550').textContent = (mebRoomUsageMinutes["MEB 2550"] / 60).toFixed(1);
         document.getElementById('metric-meb-3520').textContent = (mebRoomUsageMinutes["MEB 3520"] / 60).toFixed(1);
 
-        // Calculate percentages using the single, universal denominator
         const mwfPrimePercentage = (totalSchedulableChenCourses > 0) ? (mwfPrimeTimeCourseCount / totalSchedulableChenCourses) * 100 : 0;
         const trPrimePercentage = (totalSchedulableChenCourses > 0) ? (trPrimeTimeCourseCount / totalSchedulableChenCourses) * 100 : 0;
         const mfPrimePercentage = (totalSchedulableChenCourses > 0) ? (mfPrimeTimeCourseCount / totalSchedulableChenCourses) * 100 : 0;
