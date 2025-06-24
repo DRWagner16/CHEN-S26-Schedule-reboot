@@ -148,7 +148,7 @@ h1, h2, h3 {
     color: #fff;
     padding: 10px;
     border-radius: 6px;
-    z-index: 100;
+    z-index: 1000; /* MODIFIED: Increased z-index */
     pointer-events: none;
     font-size: 0.9em;
     line-height: 1.4;
