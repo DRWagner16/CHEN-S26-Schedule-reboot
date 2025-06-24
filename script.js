@@ -346,6 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('metric-total-hrs').textContent = (totalWeeklyMinutes / 60).toFixed(1);
     }
     
+    // --- THIS IS THE FINAL, CORRECTED FUNCTION FOR THE FLOATING TOOLTIP ---
     function placeCourseOnCalendar(course, day, width = 100, left = 0) {
         const column = document.querySelector(`.day-content[data-day="${day}"]`);
         if (!column) return;
@@ -375,7 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
         column.appendChild(eventDiv);
         
-        // --- NEW MOUSE EVENTS FOR FLOATING TOOLTIP ---
+        // Mouse events for the floating tooltip
         eventDiv.addEventListener('mouseover', () => {
             // When hovering, populate the global tooltip with this event's data
             tooltip.innerHTML = `
