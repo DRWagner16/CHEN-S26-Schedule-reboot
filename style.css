@@ -136,27 +136,38 @@ h1, h2, h3 {
     overflow: hidden; 
     text-overflow: ellipsis; 
 }
+/* --- Corrected Smart Tooltip Styles --- */
+
+.class-event:hover .event-tooltip {
+    /* This rule should be removed if it exists, as JS now handles visibility */
+    display: none; 
+}
+
 .event-tooltip {
-    display: none;
+    display: none; /* Hidden by default */
     position: absolute;
     top: 0;
-    left: 102%;
+    left: 102%; /* Appears on the right side by default */
     width: 220px;
     background-color: #333;
     color: #fff;
     padding: 10px;
     border-radius: 6px;
     z-index: 100;
-    pointer-events: none;
+    pointer-events: none; /* Prevents the tooltip from interfering with other hovers */
     font-size: 0.9em;
     line-height: 1.4;
 }
+
+/* This class will be added by JavaScript to make the tooltip visible */
+.event-tooltip.tooltip-visible {
+    display: block;
+}
+
+/* This class will be added by JavaScript to flip the tooltip to the left */
 .event-tooltip.tooltip-left {
     left: auto;
     right: 102%;
-}
-.event-tooltip.tooltip-visible {
-    display: block;
 }
 .course-table-container, .unscheduled-courses-container, .metrics-dashboard {
     width: 100%;
