@@ -138,25 +138,30 @@ h1, h2, h3 {
     overflow: hidden; 
     text-overflow: ellipsis; 
 }
+/* --- Smart Tooltip Styles --- */
 .event-tooltip {
-    display: none;
+    display: none; /* Hidden by default, visibility is now handled by JavaScript */
     position: absolute;
     top: 0;
-    left: 102%;
-    width: 220px;
+    left: 102%; /* Default position is to the right of the course block */
+    width: 200px;
     background-color: #333;
     color: #fff;
-    padding: 10px;
+    padding: 8px;
     border-radius: 6px;
-    z-index: 1000; /* MODIFIED: Increased z-index */
-    pointer-events: none;
-    font-size: 0.9em;
+    z-index: 1000;
+    pointer-events: none; /* Prevents tooltip from interfering with other mouse events */
+    font-size: 0.85em;
     line-height: 1.4;
 }
+
+/* This class will be added by JavaScript to flip the tooltip to the left */
 .event-tooltip.tooltip-left {
-    left: auto;
-    right: 102%;
+    left: auto; /* Deactivate the left positioning */
+    right: 102%; /* Position it to the left of the course block */
 }
+
+/* This class will be added by JavaScript to make the tooltip visible */
 .event-tooltip.tooltip-visible {
     display: block;
 }
