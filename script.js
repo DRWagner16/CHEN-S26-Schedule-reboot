@@ -346,7 +346,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('metric-total-hrs').textContent = (totalWeeklyMinutes / 60).toFixed(1);
     }
     
-    // --- MODIFIED --- This function has the correct event listeners restored
     function placeCourseOnCalendar(course, day, width = 100, left = 0) {
         const column = document.querySelector(`.day-content[data-day="${day}"]`);
         if (!column) return;
