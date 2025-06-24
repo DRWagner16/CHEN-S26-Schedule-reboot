@@ -120,7 +120,8 @@ h1, h2, h3 {
     color: #777;
 }
 .class-event { 
-    position: absolute; 
+    position: relative; /* This is crucial for the tooltip to be positioned correctly */
+    background-color: #a3c4f3; 
     border-radius: 4px; 
     padding: 4px; 
     box-sizing: border-box; 
@@ -130,21 +131,17 @@ h1, h2, h3 {
     cursor: pointer; 
     overflow: hidden;
 }
+
 .event-title { 
     font-weight: bold; 
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis; 
 }
-/* --- Corrected Smart Tooltip Styles --- */
 
-/* .class-event:hover .event-tooltip { */
-    /* This rule should be removed if it exists, as JS now handles visibility */
-    /* display: none; */
-/*}*/
-
+/* --- Smart Tooltip Styles --- */
 .event-tooltip {
-    display: none; /* Hidden by default */
+    display: none; /* Hidden by default, shown by JavaScript */
     position: absolute;
     top: 0;
     left: 102%; /* Appears on the right side by default */
@@ -154,20 +151,20 @@ h1, h2, h3 {
     padding: 10px;
     border-radius: 6px;
     z-index: 100;
-    pointer-events: none; /* Prevents the tooltip from interfering with other hovers */
+    pointer-events: none;
     font-size: 0.9em;
     line-height: 1.4;
-}
-
-/* This class will be added by JavaScript to make the tooltip visible */
-.event-tooltip.tooltip-visible {
-    display: block;
 }
 
 /* This class will be added by JavaScript to flip the tooltip to the left */
 .event-tooltip.tooltip-left {
     left: auto;
     right: 102%;
+}
+
+/* This class will be added by JavaScript to make the tooltip visible */
+.event-tooltip.tooltip-visible {
+    display: block;
 }
 .course-table-container, .unscheduled-courses-container, .metrics-dashboard {
     width: 100%;
