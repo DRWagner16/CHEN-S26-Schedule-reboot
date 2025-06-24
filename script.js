@@ -266,17 +266,37 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- MODIFIED --- This function has the final metric definitions
     function calculateAndDisplayMetrics(courses) {
         const primeTimeStart = 9 * 60;
         const primeTimeEnd = 13 * 60 + 59;
+        
         let mebRoomUsageMinutes = { "MEB 1292": 0, "MEB 2550": 0, "MEB 3520": 0 };
+        let dailyMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
+        
         let mwfPrimeTimeCourseCount = 0;
         let trPrimeTimeCourseCount = 0;
         let mfPrimeTimeCourseCount = 0;
-        let totalSchedulableChenCourses = 0;
-        let dailyMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
+        
+        // --- NEW: First, find the unique set of CH EN courses to use as the denominator ---
+        const uniqueChenCourses = new Set();
+        courses.forEach(course => {
+            if (course.course_number.startsWith("CH EN")) {
+                const courseNumStr = course.course_number.replace("CH EN", "").trim();
+                const courseNum = parseInt(courseNumStr, 10);
+                if (!isNaN(courseNum) && courseNum >= 1000 && courseNum <= 5999) {
+                    uniqueChenCourses.add(course.course_number);
+                }
+            }
+        });
+        const totalSchedulableChenCourses = uniqueChenCourses.size;
+        // --- END NEW ---
+
+        // Loop through all events to calculate the numerators and other metrics
         courses.forEach(course => {
             if (!course.duration || !course.days || !course.startMinutes) return;
+
+            // MEB Room usage (for CH EN or ENGIN)
             if (course.course_number.startsWith("CH EN") || course.course_number.startsWith("ENGIN")) {
                 const courseLocations = (course.location || '').split(';').map(l => l.trim());
                 courseLocations.forEach(loc => {
@@ -285,50 +305,80 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             }
-            if (course.course_number.startsWith("CH EN")) {
-                const courseNumStr = course.course_number.replace("CH EN", "").trim();
-                const courseNum = parseInt(courseNumStr, 10);
-                if (!isNaN(courseNum) && courseNum >= 1000 && courseNum <= 5999) {
-                    totalSchedulableChenCourses++;
-                    const startsInPrimeTime = course.startMinutes >= primeTimeStart && course.startMinutes <= primeTimeEnd;
-                    if (startsInPrimeTime) {
-                        mfPrimeTimeCourseCount++;
-                        const isMwfCourse = course.days.includes('M') || course.days.includes('W') || course.days.includes('F');
-                        const isTrCourse = course.days.includes('T') || course.days.includes('R');
-                        if (isMwfCourse) mwfPrimeTimeCourseCount++;
-                        if (isTrCourse) trPrimeTimeCourseCount++;
-                    }
-                    for (const dayChar of course.days) {
-                        const dayCode = dayMap[dayChar];
-                        if (dayCode) dailyMinutes[dayCode] += course.duration;
-                    }
+
+            // --- The rest of the metrics are still filtered for specific CH EN courses ---
+            if (!course.course_number.startsWith("CH EN")) return;
+            const courseNumStr = course.course_number.replace("CH EN", "").trim();
+            const courseNum = parseInt(courseNumStr, 10);
+            if (isNaN(courseNum) || courseNum < 1000 || courseNum > 5999) return;
+            
+            // This course is a valid undergrad CH EN course
+            const startsInPrimeTime = course.startMinutes >= primeTimeStart && course.startMinutes <= primeTimeEnd;
+            if (startsInPrimeTime) {
+                // We use a Set to only count each unique course once for the M-F total
+                // This will be handled after the loop. For now, we just check day patterns.
+                const isMwfCourse = course.days.includes('M') || course.days.includes('W') || course.days.includes('F');
+                const isTrCourse = course.days.includes('T') || course.days.includes('R');
+                
+                if (isMwfCourse) mwfPrimeTimeCourseCount++;
+                if (isTrCourse) trPrimeTimeCourseCount++;
+            }
+            
+            // Calculate daily hours for the summary table
+            for (const dayChar of course.days) {
+                const dayCode = dayMap[dayChar];
+                if (dayCode) {
+                    dailyMinutes[dayCode] += course.duration;
                 }
             }
         });
+
+        // --- Post-loop calculations for Prime Time ---
+        // To get an accurate M-F prime time count without double-counting, we find all unique courses
+        // that start in prime time.
+        const primeTimeCourses = new Set();
+        courses.forEach(course => {
+            if (uniqueChenCourses.has(course.course_number)) { // Ensure it's a course we care about
+                if (course.startMinutes >= primeTimeStart && course.startMinutes <= primeTimeEnd) {
+                    primeTimeCourses.add(course.course_number);
+                }
+            }
+        });
+        mfPrimeTimeCourseCount = primeTimeCourses.size;
+
+        // --- Final Calculations & Display ---
         const totalWeeklyMinutes = Object.values(dailyMinutes).reduce((sum, mins) => sum + mins, 0);
+
         document.getElementById('metric-meb-1292').textContent = (mebRoomUsageMinutes["MEB 1292"] / 60).toFixed(1);
         document.getElementById('metric-meb-2550').textContent = (mebRoomUsageMinutes["MEB 2550"] / 60).toFixed(1);
         document.getElementById('metric-meb-3520').textContent = (mebRoomUsageMinutes["MEB 3520"] / 60).toFixed(1);
+
+        // Calculate percentages using the single, universal denominator
         const mwfPrimePercentage = (totalSchedulableChenCourses > 0) ? (mwfPrimeTimeCourseCount / totalSchedulableChenCourses) * 100 : 0;
         const trPrimePercentage = (totalSchedulableChenCourses > 0) ? (trPrimeTimeCourseCount / totalSchedulableChenCourses) * 100 : 0;
         const mfPrimePercentage = (totalSchedulableChenCourses > 0) ? (mfPrimeTimeCourseCount / totalSchedulableChenCourses) * 100 : 0;
+        
         document.getElementById('metric-mwf-prime-pct').textContent = mwfPrimePercentage.toFixed(0);
         document.getElementById('metric-tr-prime-pct').textContent = trPrimePercentage.toFixed(0);
         document.getElementById('metric-mf-prime-pct').textContent = mfPrimePercentage.toFixed(0);
+        
         document.getElementById('metric-mwf-prime-count').textContent = mwfPrimeTimeCourseCount;
         document.getElementById('metric-tr-prime-count').textContent = trPrimeTimeCourseCount;
         document.getElementById('metric-mf-prime-count').textContent = mfPrimeTimeCourseCount;
         document.getElementById('metric-total-chen-courses').textContent = totalSchedulableChenCourses;
+
         document.getElementById('metric-mo-hrs').textContent = (dailyMinutes.Mo / 60).toFixed(1);
         document.getElementById('metric-tu-hrs').textContent = (dailyMinutes.Tu / 60).toFixed(1);
         document.getElementById('metric-we-hrs').textContent = (dailyMinutes.We / 60).toFixed(1);
         document.getElementById('metric-th-hrs').textContent = (dailyMinutes.Th / 60).toFixed(1);
         document.getElementById('metric-fr-hrs').textContent = (dailyMinutes.Fr / 60).toFixed(1);
+
         document.getElementById('metric-mo-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Mo / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-tu-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Tu / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-we-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.We / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-th-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Th / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-fr-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Fr / totalWeeklyMinutes) * 100 : 0).toFixed(0);
+
         document.getElementById('metric-total-hrs').textContent = (totalWeeklyMinutes / 60).toFixed(1);
     }
     
