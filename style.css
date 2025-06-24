@@ -79,10 +79,13 @@ h1, h2, h3 {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+/* --- MODIFIED: This section is the primary fix --- */
 .calendar-container {
     border: 1px solid #ddd;
     background-color: #fff;
-    overflow-x: auto;
+    overflow-x: auto; /* Provides a scrollbar only if absolutely necessary */
+    max-width: 1200px; /* Constrains the calendar's maximum width */
+    margin: 0 auto; /* Centers the calendar on the page */
 }
 .calendar-grid {
     display: grid;
@@ -120,8 +123,7 @@ h1, h2, h3 {
     color: #777;
 }
 .class-event { 
-    position: relative; /* This is crucial for the tooltip to be positioned correctly */
-    background-color: #a3c4f3; 
+    position: absolute;
     border-radius: 4px; 
     padding: 4px; 
     box-sizing: border-box; 
@@ -131,20 +133,17 @@ h1, h2, h3 {
     cursor: pointer; 
     overflow: hidden;
 }
-
 .event-title { 
     font-weight: bold; 
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis; 
 }
-
-/* --- Smart Tooltip Styles --- */
 .event-tooltip {
-    display: none; /* Hidden by default, shown by JavaScript */
+    display: none;
     position: absolute;
     top: 0;
-    left: 102%; /* Appears on the right side by default */
+    left: 102%;
     width: 220px;
     background-color: #333;
     color: #fff;
@@ -155,14 +154,10 @@ h1, h2, h3 {
     font-size: 0.9em;
     line-height: 1.4;
 }
-
-/* This class will be added by JavaScript to flip the tooltip to the left */
 .event-tooltip.tooltip-left {
     left: auto;
     right: 102%;
 }
-
-/* This class will be added by JavaScript to make the tooltip visible */
 .event-tooltip.tooltip-visible {
     display: block;
 }
