@@ -349,6 +349,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function placeCourseOnCalendar(course, day, width = 100, left = 0) {
         const column = document.querySelector(`.day-content[data-day="${day}"]`);
         if (!column) return;
+    
+        // This is a reference to the single, global tooltip
         const tooltip = document.getElementById('course-tooltip');
         
         const minutesSinceCalendarStart = course.startMinutes - (START_HOUR * 60);
@@ -372,6 +374,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
         column.appendChild(eventDiv);
         
+        // Mouse events for the floating tooltip
         eventDiv.addEventListener('mouseover', () => {
             tooltip.innerHTML = `
                 <strong>Course:</strong> ${course.course_number}<br>
@@ -388,12 +391,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
         eventDiv.addEventListener('mouseout', () => {
             tooltip.style.display = 'none';
-            tooltip.innerHTML = '';
+            tooltip.innerHTML = ''; 
         });
     
+        // --- THIS IS THE CORRECTED PART ---
         eventDiv.addEventListener('mousemove', (e) => {
-            tooltip.style.left = e.pageX + 15 + 'px';
-            tooltip.style.top = e.pageY + 15 + 'px';
+            // Use clientX/clientY which are relative to the viewport (the window)
+            tooltip.style.left = e.clientX + 15 + 'px';
+            tooltip.style.top = e.clientY + 15 + 'px';
         });
     }
 });
