@@ -270,8 +270,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const primeTimeStart = 9 * 60;
         const primeTimeEnd = 13 * 60 + 59;
         let mebRoomUsageMinutes = { "MEB 1292": 0, "MEB 2550": 0, "MEB 3520": 0 };
-        let mwfPrimeTimeMinutes = 0;
-        let trPrimeTimeMinutes = 0;
+        let mwfPrimeTimeCourseCount = 0;
+        let trPrimeTimeCourseCount = 0;
+        let mfPrimeTimeCourseCount = 0;
+        let totalSchedulableChenCourses = 0;
         let dailyMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
         courses.forEach(course => {
             if (!course.duration || !course.days || !course.startMinutes) return;
@@ -287,36 +289,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 const courseNumStr = course.course_number.replace("CH EN", "").trim();
                 const courseNum = parseInt(courseNumStr, 10);
                 if (!isNaN(courseNum) && courseNum >= 1000 && courseNum <= 5999) {
-                    const courseEndMinutes = course.startMinutes + course.duration;
-                    const overlapStart = Math.max(course.startMinutes, primeTimeStart);
-                    const overlapEnd = Math.min(courseEndMinutes, primeTimeEnd);
-                    const primeMinutesForThisCourse = Math.max(0, overlapEnd - overlapStart);
+                    totalSchedulableChenCourses++;
+                    const startsInPrimeTime = course.startMinutes >= primeTimeStart && course.startMinutes <= primeTimeEnd;
+                    if (startsInPrimeTime) {
+                        mfPrimeTimeCourseCount++;
+                        const isMwfCourse = course.days.includes('M') || course.days.includes('W') || course.days.includes('F');
+                        const isTrCourse = course.days.includes('T') || course.days.includes('R');
+                        if (isMwfCourse) mwfPrimeTimeCourseCount++;
+                        if (isTrCourse) trPrimeTimeCourseCount++;
+                    }
                     for (const dayChar of course.days) {
                         const dayCode = dayMap[dayChar];
-                        if (!dayCode) continue;
-                        dailyMinutes[dayCode] += course.duration;
-                        if (dayChar === 'M' || dayChar === 'W' || dayChar === 'F') {
-                            mwfPrimeTimeMinutes += primeMinutesForThisCourse;
-                        } else if (dayChar === 'T' || dayChar === 'R') {
-                            trPrimeTimeMinutes += primeMinutesForThisCourse;
-                        }
+                        if (dayCode) dailyMinutes[dayCode] += course.duration;
                     }
                 }
             }
         });
         const totalWeeklyMinutes = Object.values(dailyMinutes).reduce((sum, mins) => sum + mins, 0);
-        const totalPrimeTimeMinutes = mwfPrimeTimeMinutes + trPrimeTimeMinutes;
-        const totalMinutesOutsidePrime = totalWeeklyMinutes - totalPrimeTimeMinutes;
         document.getElementById('metric-meb-1292').textContent = (mebRoomUsageMinutes["MEB 1292"] / 60).toFixed(1);
         document.getElementById('metric-meb-2550').textContent = (mebRoomUsageMinutes["MEB 2550"] / 60).toFixed(1);
         document.getElementById('metric-meb-3520').textContent = (mebRoomUsageMinutes["MEB 3520"] / 60).toFixed(1);
-        const mwfPrimePercentage = (totalWeeklyMinutes > 0) ? (mwfPrimeTimeMinutes / totalWeeklyMinutes) * 100 : 0;
-        const trPrimePercentage = (totalWeeklyMinutes > 0) ? (trPrimeTimeMinutes / totalWeeklyMinutes) * 100 : 0;
-        const outsidePrimePercentage = (totalWeeklyMinutes > 0) ? (totalMinutesOutsidePrime / totalWeeklyMinutes) * 100 : 0;
-        document.getElementById('metric-mwf-prime').textContent = mwfPrimePercentage.toFixed(0);
-        document.getElementById('metric-tr-prime').textContent = trPrimePercentage.toFixed(0);
-        document.getElementById('metric-outside-prime-hrs').textContent = (totalMinutesOutsidePrime / 60).toFixed(1);
-        document.getElementById('metric-outside-prime-pct').textContent = outsidePrimePercentage.toFixed(0);
+        const mwfPrimePercentage = (totalSchedulableChenCourses > 0) ? (mwfPrimeTimeCourseCount / totalSchedulableChenCourses) * 100 : 0;
+        const trPrimePercentage = (totalSchedulableChenCourses > 0) ? (trPrimeTimeCourseCount / totalSchedulableChenCourses) * 100 : 0;
+        const mfPrimePercentage = (totalSchedulableChenCourses > 0) ? (mfPrimeTimeCourseCount / totalSchedulableChenCourses) * 100 : 0;
+        document.getElementById('metric-mwf-prime-pct').textContent = mwfPrimePercentage.toFixed(0);
+        document.getElementById('metric-tr-prime-pct').textContent = trPrimePercentage.toFixed(0);
+        document.getElementById('metric-mf-prime-pct').textContent = mfPrimePercentage.toFixed(0);
+        document.getElementById('metric-mwf-prime-count').textContent = mwfPrimeTimeCourseCount;
+        document.getElementById('metric-tr-prime-count').textContent = trPrimeTimeCourseCount;
+        document.getElementById('metric-mf-prime-count').textContent = mfPrimeTimeCourseCount;
+        document.getElementById('metric-total-chen-courses').textContent = totalSchedulableChenCourses;
         document.getElementById('metric-mo-hrs').textContent = (dailyMinutes.Mo / 60).toFixed(1);
         document.getElementById('metric-tu-hrs').textContent = (dailyMinutes.Tu / 60).toFixed(1);
         document.getElementById('metric-we-hrs').textContent = (dailyMinutes.We / 60).toFixed(1);
@@ -330,7 +332,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('metric-total-hrs').textContent = (totalWeeklyMinutes / 60).toFixed(1);
     }
     
-    // --- THIS IS THE UPDATED FUNCTION WITH THE TOOLTIP FIX ---
     function placeCourseOnCalendar(course, day, width = 100, left = 0) {
         const column = document.querySelector(`.day-content[data-day="${day}"]`);
         if (!column) return;
@@ -367,15 +368,11 @@ document.addEventListener('DOMContentLoaded', () => {
             
         column.appendChild(eventDiv);
         
-        // Event listeners for smart tooltip positioning
         eventDiv.addEventListener('mouseover', () => {
             const tooltip = eventDiv.querySelector('.event-tooltip');
-            tooltip.classList.add('tooltip-visible'); // Make visible to measure
-
+            tooltip.classList.add('tooltip-visible');
             const tooltipRect = tooltip.getBoundingClientRect();
             const viewportWidth = window.innerWidth;
-
-            // If tooltip goes off the right edge, flip it left
             if (tooltipRect.right > viewportWidth) {
                 tooltip.classList.add('tooltip-left');
             }
@@ -384,7 +381,7 @@ document.addEventListener('DOMContentLoaded', () => {
         eventDiv.addEventListener('mouseout', () => {
             const tooltip = eventDiv.querySelector('.event-tooltip');
             tooltip.classList.remove('tooltip-visible');
-            tooltip.classList.remove('tooltip-left'); // Always reset
+            tooltip.classList.remove('tooltip-left');
         });
     }
 });
