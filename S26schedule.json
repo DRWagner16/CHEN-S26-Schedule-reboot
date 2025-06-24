@@ -6,7 +6,7 @@
         "time_of_day": "09:10AM-10:30AM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Year 1",
+        "type": "Year 1; CLSS",
         "notes": "",
         "anticipated_enrollment": 18
     },
@@ -17,7 +17,7 @@
         "time_of_day": "10:45AM-11:35AM",
         "duration": 50.0,
         "location": "MEB 1292",
-        "type": "Year 1",
+        "type": "Year 1; CLSS",
         "notes": "",
         "anticipated_enrollment": 18
     },
@@ -28,7 +28,7 @@
         "time_of_day": "10:45AM-11:35AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 1",
+        "type": "Year 1; CLSS",
         "notes": "",
         "anticipated_enrollment": 75
     },
@@ -39,7 +39,7 @@
         "time_of_day": "09:10AM-12:05PM",
         "duration": 175.0,
         "location": "MEB 1292",
-        "type": "Year 1",
+        "type": "Year 1; CLSS",
         "notes": "",
         "anticipated_enrollment": 30
     },
@@ -50,7 +50,7 @@
         "time_of_day": "11:50AM-02:50PM",
         "duration": 180.0,
         "location": "MEB 1292",
-        "type": "Year 1",
+        "type": "Year 1; CLSS",
         "notes": "Instructor wants to change time",
         "anticipated_enrollment": 30
     },
@@ -61,7 +61,7 @@
         "time_of_day": "03:05PM-06:00PM",
         "duration": 175.0,
         "location": "MEB 1292",
-        "type": "Year 1",
+        "type": "Year 1; CLSS",
         "notes": "Instructor wants to change time",
         "anticipated_enrollment": 15
     },
@@ -83,7 +83,7 @@
         "time_of_day": "09:40AM-10:30AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 2",
+        "type": "Year 2; CLSS",
         "notes": "-",
         "anticipated_enrollment": 60
     },
@@ -94,7 +94,7 @@
         "time_of_day": "10:45AM-11:35AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Other",
+        "type": "Other; CLSS",
         "notes": "-",
         "anticipated_enrollment": 80
     },
@@ -105,7 +105,7 @@
         "time_of_day": "09:40AM-10:30AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 4",
+        "type": "Year 4; CLSS",
         "notes": "-",
         "anticipated_enrollment": 35
     },
@@ -127,7 +127,7 @@
         "time_of_day": "11:50AM-01:10PM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Year 3",
+        "type": "Year 3; CLSS",
         "notes": "-",
         "anticipated_enrollment": 60
     },
@@ -138,7 +138,7 @@
         "time_of_day": "08:35AM-09:25AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 3",
+        "type": "Year 3; CLSS",
         "notes": "-",
         "anticipated_enrollment": 60
     },
@@ -149,7 +149,7 @@
         "time_of_day": "02:00PM-05:00PM",
         "duration": 180.0,
         "location": "MEB 2550; MEB 3520",
-        "type": "Year 3",
+        "type": "Year 3; CLSS",
         "notes": "-",
         "anticipated_enrollment": 27
     },
@@ -160,7 +160,7 @@
         "time_of_day": "02:00PM-05:00PM",
         "duration": 180.0,
         "location": "MEB 3520; MEB 2550",
-        "type": "Year 3",
+        "type": "Year 3; CLSS",
         "notes": "-",
         "anticipated_enrollment": 27
     },
@@ -171,7 +171,7 @@
         "time_of_day": "12:55PM-01:45PM",
         "duration": 50.0,
         "location": "MEB 1292",
-        "type": "Year 4",
+        "type": "Year 4; CLSS",
         "notes": "-",
         "anticipated_enrollment": 30
     },
@@ -182,7 +182,7 @@
         "time_of_day": "02:00PM-05:00PM",
         "duration": 180.0,
         "location": "MEB 1292; MEB 2550; MEB 3520",
-        "type": "Year 4",
+        "type": "Year 4; CLSS",
         "notes": "-",
         "anticipated_enrollment": 30
     },
@@ -193,7 +193,7 @@
         "time_of_day": "12:55PM-01:45PM",
         "duration": 50.0,
         "location": "MEB 1292",
-        "type": "Year 4",
+        "type": "Year 4; CLSS",
         "notes": "-",
         "anticipated_enrollment": 30
     },
@@ -204,7 +204,7 @@
         "time_of_day": "02:00PM-05:00PM",
         "duration": 180.0,
         "location": "MEB 1292; MEB 2550; MEB 3520",
-        "type": "Year 4",
+        "type": "Year 4; CLSS",
         "notes": "-",
         "anticipated_enrollment": 30
     },
@@ -215,7 +215,7 @@
         "time_of_day": "04:10PM-05:00PM",
         "duration": 50.0,
         "location": "CANVAS",
-        "type": "Other",
+        "type": "Other; CLSS",
         "notes": "-",
         "anticipated_enrollment": 15
     },
@@ -226,7 +226,7 @@
         "time_of_day": "10:45AM-12:05PM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Year 3",
+        "type": "Year 3; CLSS",
         "notes": "-",
         "anticipated_enrollment": 30
     },
@@ -248,7 +248,7 @@
         "time_of_day": "07:30AM-08:50AM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Elective",
+        "type": "Elective; CLSS",
         "notes": "6000-level gradaute course offered at same time.",
         "anticipated_enrollment": 20
     },
@@ -259,7 +259,7 @@
         "time_of_day": "08:35AM-09:25AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 4",
+        "type": "Year 4; CLSS",
         "notes": "Moved so students can take Product Design as well.",
         "anticipated_enrollment": 60
     },
@@ -270,7 +270,7 @@
         "time_of_day": "08:35AM-09:25AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 4",
+        "type": "Year 4; CLSS",
         "notes": "-",
         "anticipated_enrollment": 60
     },
@@ -281,7 +281,7 @@
         "time_of_day": "09:10AM-10:30AM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Elective",
+        "type": "Elective; CLSS",
         "notes": "6000-level gradaute course offered at same time.",
         "anticipated_enrollment": 30
     },
@@ -292,7 +292,7 @@
         "time_of_day": "12:25PM-01:45PM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Elective",
+        "type": "Elective; CLSS",
         "notes": "Instructor wants to change time. 6000-level gradaute course offered at same time.",
         "anticipated_enrollment": 30
     },
@@ -303,7 +303,7 @@
         "time_of_day": "02:00PM-05:00PM",
         "duration": 180.0,
         "location": "MEB 3520",
-        "type": "Elective",
+        "type": "Elective; CLSS",
         "notes": "-",
         "anticipated_enrollment": 20
     },
