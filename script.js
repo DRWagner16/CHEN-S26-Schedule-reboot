@@ -23,38 +23,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     instructorFilter.addEventListener('change', () => {
         const selectedInstructor = instructorFilter.value;
-        if (selectedInstructor === 'all') {
-            filterAndRedrawCalendar();
-            return;
-        }
+        if (selectedInstructor === 'all') { filterAndRedrawCalendar(); return; }
         typeFilter.value = 'all';
         locationFilter.value = 'all';
         document.querySelectorAll('#course-checkboxes input[type="checkbox"]').forEach(cb => {
             const course = allCourses.find(c => c.course_number === cb.value);
-            if (course && course.instructors.includes(selectedInstructor)) {
-                cb.checked = true;
-            } else {
-                cb.checked = false;
-            }
+            cb.checked = (course && course.instructors.includes(selectedInstructor));
         });
         filterAndRedrawCalendar();
     });
 
     typeFilter.addEventListener('change', () => {
         const selectedType = typeFilter.value;
-        if (selectedType === 'all') {
-            filterAndRedrawCalendar();
-            return;
-        }
+        if (selectedType === 'all') { filterAndRedrawCalendar(); return; }
         instructorFilter.value = 'all';
         locationFilter.value = 'all';
         document.querySelectorAll('#course-checkboxes input[type="checkbox"]').forEach(cb => {
             const course = allCourses.find(c => c.course_number === cb.value);
-            if (course && course.type === selectedType) {
-                cb.checked = true;
-            } else {
-                cb.checked = false;
-            }
+            cb.checked = (course && course.type === selectedType);
         });
         filterAndRedrawCalendar();
     });
@@ -69,54 +55,34 @@ document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('#course-checkboxes input[type="checkbox"]').forEach(cb => cb.checked = false);
         filterAndRedrawCalendar();
     });
-
+    
     showAllChenBtn.addEventListener('click', () => {
         instructorFilter.value = 'all';
         typeFilter.value = 'all';
         locationFilter.value = 'all';
         document.querySelectorAll('#course-checkboxes input[type="checkbox"]').forEach(cb => {
-            if (cb.value.startsWith("CH EN")) {
-                cb.checked = true;
-            } else {
-                cb.checked = false;
-            }
+            cb.checked = cb.value.startsWith("CH EN");
         });
         filterAndRedrawCalendar();
     });
 
-    // --- MODIFIED --- This function now has greater variation in saturation and lightness.
     function courseToHslColor(course) {
         const typeBaseHues = {
-            'Year 1': 103,   // Mountain Green
-            'Year 2': 180,   // Great Salt Lake
-            'Year 3': 41,    // Wasatch Sunrise
-            'Year 4': 0,     // Utah Red
-            'Elective': 196, // Granite Peak
-            'Graduate': 30,  // Orange
-            'Other': 230,    // Blue
+            'Year 1': 210, 'Year 2': 120, 'Year 3': 50,
+            'Year 4': 0, 'Elective': 280, 'Graduate': 30, 'Other': 300,
         };
-        
         let baseHue = typeBaseHues[course.type] ?? 0;
-        
-        // Default to gray for unknown types
+        let saturation = 65;
         if (typeBaseHues[course.type] === undefined) {
-            baseHue = 0;
+            saturation = 0;
         }
-
         let hash = 0;
         const str = course.course_number;
         for (let i = 0; i < str.length; i++) {
             hash = str.charCodeAt(i) + ((hash << 5) - hash);
         }
-
-        // Generate saturation and lightness from the hash for more variety
-        const saturation = 50 + (Math.abs(hash) % 35); // Range: 55-84%
-        const lightness = 50 + (Math.abs(hash >> 8) % 35); // Range: 65-79%
-
-        // If the type was unknown, force saturation to 0 for a grayscale color
-        const finalSaturation = typeBaseHues[course.type] === undefined ? 0 : saturation;
-
-        return `hsl(${baseHue}, ${finalSaturation}%, ${lightness}%)`;
+        const hueVariation = (hash % 21) - 10;
+        return `hsl(${baseHue + hueVariation}, ${saturation}%, 70%)`;
     }
 
     function generateTimeSlots() {
@@ -146,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const endMinutes = startMinutes + course.duration;
                     return { ...course, startMinutes, endMinutes };
                 });
-                
                 populateFilters(allCourses);
                 filterAndRedrawCalendar();
             })
@@ -301,67 +266,88 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- MODIFIED --- This function is updated for the new prime time course count logic
     function calculateAndDisplayMetrics(courses) {
         const primeTimeStart = 9 * 60;
-        const primeTimeEnd = 14 * 60;
+        const primeTimeEnd = 13 * 60 + 59;
+        
         let mebRoomUsageMinutes = { "MEB 1292": 0, "MEB 2550": 0, "MEB 3520": 0 };
-        let mwfPrimeTimeMinutes = 0;
-        let trPrimeTimeMinutes = 0;
         let dailyMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
+        
+        // --- NEW: Counters for separate MWF and TR prime time course counts ---
+        let mwfPrimeTimeCourseCount = 0;
+        let totalMwfCourses = 0;
+        let trPrimeTimeCourseCount = 0;
+        let totalTrCourses = 0;
+
         courses.forEach(course => {
-            if (!course.duration || !course.days || !course.startMinutes) return;
+            // MEB Room usage (for CH EN or ENGIN)
             if (course.course_number.startsWith("CH EN") || course.course_number.startsWith("ENGIN")) {
-                const courseLocations = (course.location || '').split(';').map(l => l.trim());
-                courseLocations.forEach(loc => {
-                    if (loc in mebRoomUsageMinutes) {
-                        mebRoomUsageMinutes[loc] += course.duration * course.days.length;
-                    }
-                });
-            }
-            if (course.course_number.startsWith("CH EN")) {
-                const courseNumStr = course.course_number.replace("CH EN", "").trim();
-                const courseNum = parseInt(courseNumStr, 10);
-                if (!isNaN(courseNum) && courseNum >= 1000 && courseNum <= 5999) {
-                    const courseEndMinutes = course.startMinutes + course.duration;
-                    const overlapStart = Math.max(course.startMinutes, primeTimeStart);
-                    const overlapEnd = Math.min(courseEndMinutes, primeTimeEnd);
-                    const primeMinutesForThisCourse = Math.max(0, overlapEnd - overlapStart);
-                    for (const dayChar of course.days) {
-                        const dayCode = dayMap[dayChar];
-                        if (!dayCode) continue;
-                        dailyMinutes[dayCode] += course.duration;
-                        if (dayChar === 'M' || dayChar === 'W' || dayChar === 'F') {
-                            mwfPrimeTimeMinutes += primeMinutesForThisCourse;
-                        } else if (dayChar === 'T' || dayChar === 'R') {
-                            trPrimeTimeMinutes += primeMinutesForThisCourse;
+                if (course.duration && course.days) {
+                    const courseLocations = (course.location || '').split(';').map(l => l.trim());
+                    courseLocations.forEach(loc => {
+                        if (loc in mebRoomUsageMinutes) {
+                            mebRoomUsageMinutes[loc] += course.duration * course.days.length;
                         }
-                    }
+                    });
+                }
+            }
+
+            // --- All following metrics are for schedulable, undergrad CH EN courses only ---
+            if (!course.course_number.startsWith("CH EN")) return;
+            const courseNumStr = course.course_number.replace("CH EN", "").trim();
+            const courseNum = parseInt(courseNumStr, 10);
+            if (isNaN(courseNum) || courseNum < 1000 || courseNum > 5999) return;
+            
+            const isMwfCourse = course.days.includes('M') || course.days.includes('W') || course.days.includes('F');
+            const isTrCourse = course.days.includes('T') || course.days.includes('R');
+            const startsInPrimeTime = course.startMinutes >= primeTimeStart && course.startMinutes <= primeTimeEnd;
+
+            if (isMwfCourse) totalMwfCourses++;
+            if (isTrCourse) totalTrCourses++;
+
+            if (startsInPrimeTime) {
+                if (isMwfCourse) mwfPrimeTimeCourseCount++;
+                if (isTrCourse) trPrimeTimeCourseCount++;
+            }
+            
+            // Calculate daily hours for the summary table
+            for (const dayChar of course.days) {
+                const dayCode = dayMap[dayChar];
+                if (dayCode) {
+                    dailyMinutes[dayCode] += course.duration;
                 }
             }
         });
+
+        // --- Final Calculations & Display ---
         const totalWeeklyMinutes = Object.values(dailyMinutes).reduce((sum, mins) => sum + mins, 0);
-        const totalPrimeTimeMinutes = mwfPrimeTimeMinutes + trPrimeTimeMinutes;
-        const totalMinutesOutsidePrime = totalWeeklyMinutes - totalPrimeTimeMinutes;
+
+        // Display MEB Usage
         document.getElementById('metric-meb-1292').textContent = (mebRoomUsageMinutes["MEB 1292"] / 60).toFixed(1);
         document.getElementById('metric-meb-2550').textContent = (mebRoomUsageMinutes["MEB 2550"] / 60).toFixed(1);
         document.getElementById('metric-meb-3520').textContent = (mebRoomUsageMinutes["MEB 3520"] / 60).toFixed(1);
-        const mwfPrimePercentage = (totalWeeklyMinutes > 0) ? (mwfPrimeTimeMinutes / totalWeeklyMinutes) * 100 : 0;
-        const trPrimePercentage = (totalWeeklyMinutes > 0) ? (trPrimeTimeMinutes / totalWeeklyMinutes) * 100 : 0;
-        const outsidePrimePercentage = (totalWeeklyMinutes > 0) ? (totalMinutesOutsidePrime / totalWeeklyMinutes) * 100 : 0;
-        document.getElementById('metric-mwf-prime').textContent = mwfPrimePercentage.toFixed(0);
-        document.getElementById('metric-tr-prime').textContent = trPrimePercentage.toFixed(0);
-        document.getElementById('metric-outside-prime-hrs').textContent = (totalMinutesOutsidePrime / 60).toFixed(1);
-        document.getElementById('metric-outside-prime-pct').textContent = outsidePrimePercentage.toFixed(0);
+
+        // Display new Prime Time Metrics
+        const mwfPrimePercentage = (totalMwfCourses > 0) ? (mwfPrimeTimeCourseCount / totalMwfCourses) * 100 : 0;
+        const trPrimePercentage = (totalTrCourses > 0) ? (trPrimeTimeCourseCount / totalTrCourses) * 100 : 0;
+        
+        document.getElementById('metric-mwf-prime-pct').textContent = mwfPrimePercentage.toFixed(0);
+        document.getElementById('metric-tr-prime-pct').textContent = trPrimePercentage.toFixed(0);
+
+        // Display Daily Distribution
         document.getElementById('metric-mo-hrs').textContent = (dailyMinutes.Mo / 60).toFixed(1);
         document.getElementById('metric-tu-hrs').textContent = (dailyMinutes.Tu / 60).toFixed(1);
         document.getElementById('metric-we-hrs').textContent = (dailyMinutes.We / 60).toFixed(1);
         document.getElementById('metric-th-hrs').textContent = (dailyMinutes.Th / 60).toFixed(1);
         document.getElementById('metric-fr-hrs').textContent = (dailyMinutes.Fr / 60).toFixed(1);
+
         document.getElementById('metric-mo-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Mo / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-tu-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Tu / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-we-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.We / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-th-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Th / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-fr-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Fr / totalWeeklyMinutes) * 100 : 0).toFixed(0);
+
         document.getElementById('metric-total-hrs').textContent = (totalWeeklyMinutes / 60).toFixed(1);
     }
     
