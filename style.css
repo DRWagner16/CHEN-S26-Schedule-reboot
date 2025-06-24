@@ -79,13 +79,12 @@ h1, h2, h3 {
     overflow: hidden;
     text-overflow: ellipsis;
 }
-/* --- MODIFIED: This section is the primary fix --- */
 .calendar-container {
     border: 1px solid #ddd;
     background-color: #fff;
-    overflow-x: auto; /* Provides a scrollbar only if absolutely necessary */
-    max-width: 1200px; /* Constrains the calendar's maximum width */
-    margin: 0 auto; /* Centers the calendar on the page */
+    overflow-x: auto;
+    max-width: 1200px; 
+    margin: 20px auto; 
 }
 .calendar-grid {
     display: grid;
