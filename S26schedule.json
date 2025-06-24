@@ -1,6 +1,6 @@
 [
     {
-        "course_number": "CH EN 1703",
+        "course_number": "CH EN 1703-001",
         "instructors": "Holmes",
         "days": "TR",
         "time_of_day": "09:10AM-10:30AM",
@@ -11,7 +11,7 @@
         "anticipated_enrollment": 18
     },
     {
-        "course_number": "CH EN 1703",
+        "course_number": "CH EN 1703-001",
         "instructors": "Holmes",
         "days": "R",
         "time_of_day": "10:45AM-11:35AM",
@@ -22,7 +22,7 @@
         "anticipated_enrollment": 18
     },
     {
-        "course_number": "CH EN 1705-Lec",
+        "course_number": "CH EN 1705-Lec-001",
         "instructors": "Butterfield; Firth; Mohanty",
         "days": "M",
         "time_of_day": "10:45AM-11:35AM",
@@ -33,7 +33,7 @@
         "anticipated_enrollment": 75
     },
     {
-        "course_number": "CH EN 1705-Lab",
+        "course_number": "CH EN 1705-Lab-002",
         "instructors": "Butterfield; Firth; Mohanty",
         "days": "R",
         "time_of_day": "09:10AM-12:05PM",
@@ -44,7 +44,7 @@
         "anticipated_enrollment": 30
     },
     {
-        "course_number": "CH EN 1705-Lab",
+        "course_number": "CH EN 1705-Lab-003",
         "instructors": "Butterfield; Firth; Mohanty",
         "days": "F",
         "time_of_day": "09:40AM-12:40PM",
@@ -55,7 +55,7 @@
         "anticipated_enrollment": 30
     },
     {
-        "course_number": "CH EN 1705-Lab",
+        "course_number": "CH EN 1705-Lab-004",
         "instructors": "Butterfield; Firth; Mohanty",
         "days": "F",
         "time_of_day": "02:00PM-05:00PM",
@@ -66,7 +66,7 @@
         "anticipated_enrollment": 15
     },
     {
-        "course_number": "CH EN 2550-Stats",
+        "course_number": "CH EN 2550",
         "instructors": "Saad",
         "days": "TR",
         "time_of_day": "02:00PM-03:20PM",
@@ -77,7 +77,7 @@
         "anticipated_enrollment": 60
     },
     {
-        "course_number": "CH EN 2800-ProFund",
+        "course_number": "CH EN 2800",
         "instructors": "Fernandes",
         "days": "MWF",
         "time_of_day": "09:40AM-10:30AM",
@@ -88,7 +88,7 @@
         "anticipated_enrollment": 60
     },
     {
-        "course_number": "CH EN 2955-Seminar",
+        "course_number": "CH EN 2955",
         "instructors": "Eddings",
         "days": "T",
         "time_of_day": "10:45AM-11:35AM",
@@ -99,7 +99,7 @@
         "anticipated_enrollment": 80
     },
     {
-        "course_number": "CH EN 3253-Safety",
+        "course_number": "CH EN 3253",
         "instructors": "Deo; Wagner",
         "days": "MWF",
         "time_of_day": "09:40AM-10:30AM",
@@ -110,7 +110,7 @@
         "anticipated_enrollment": 35
     },
     {
-        "course_number": "CH EN 3453-Heat",
+        "course_number": "CH EN 3453",
         "instructors": "Clavijo",
         "days": "MWF",
         "time_of_day": "12:55PM-01:45PM",
@@ -121,7 +121,7 @@
         "anticipated_enrollment": 10
     },
     {
-        "course_number": "CH EN 3553-Kinetics",
+        "course_number": "CH EN 3553",
         "instructors": "Duan; Nigra",
         "days": "MW",
         "time_of_day": "11:50AM-01:10PM",
@@ -132,7 +132,7 @@
         "anticipated_enrollment": 60
     },
     {
-        "course_number": "CH EN 3603-Mass",
+        "course_number": "CH EN 3603",
         "instructors": "Gao",
         "days": "MWF",
         "time_of_day": "08:35AM-09:25AM",
@@ -143,7 +143,7 @@
         "anticipated_enrollment": 60
     },
     {
-        "course_number": "CH EN 3702-JunLab",
+        "course_number": "CH EN 3702-001",
         "instructors": "McLennan; Kelly",
         "days": "M",
         "time_of_day": "02:00PM-05:00PM",
@@ -154,7 +154,7 @@
         "anticipated_enrollment": 27
     },
     {
-        "course_number": "CH EN 3702-JunLab",
+        "course_number": "CH EN 3702-002",
         "instructors": "McLennan; Kelly",
         "days": "T",
         "time_of_day": "02:00PM-05:00PM",
@@ -165,7 +165,7 @@
         "anticipated_enrollment": 27
     },
     {
-        "course_number": "CH EN 4707-Cap",
+        "course_number": "CH EN 4707-001",
         "instructors": "Butterfield",
         "days": "W",
         "time_of_day": "12:55PM-01:45PM",
@@ -176,7 +176,7 @@
         "anticipated_enrollment": 30
     },
     {
-        "course_number": "CH EN 4707-Cap",
+        "course_number": "CH EN 4707-001",
         "instructors": "Butterfield",
         "days": "W",
         "time_of_day": "02:00PM-05:00PM",
@@ -187,7 +187,7 @@
         "anticipated_enrollment": 30
     },
     {
-        "course_number": "CH EN 4707-Cap",
+        "course_number": "CH EN 4707-002",
         "instructors": "Butterfield",
         "days": "R",
         "time_of_day": "12:55PM-01:45PM",
@@ -198,7 +198,7 @@
         "anticipated_enrollment": 30
     },
     {
-        "course_number": "CH EN 4707-Cap",
+        "course_number": "CH EN 4707-002",
         "instructors": "Butterfield",
         "days": "R",
         "time_of_day": "02:00PM-05:00PM",
@@ -209,7 +209,7 @@
         "anticipated_enrollment": 30
     },
     {
-        "course_number": "CH EN 4870-IEA",
+        "course_number": "CH EN 4870",
         "instructors": "Sieving; Powell",
         "days": "W",
         "time_of_day": "04:10PM-05:00PM",
@@ -220,7 +220,7 @@
         "anticipated_enrollment": 15
     },
     {
-        "course_number": "CH EN 5103-Bio",
+        "course_number": "CH EN 5103",
         "instructors": "Sant",
         "days": "TR",
         "time_of_day": "10:45AM-12:05PM",
@@ -231,7 +231,7 @@
         "anticipated_enrollment": 30
     },
     {
-        "course_number": "CH EN 5203-LinContSys",
+        "course_number": "CH EN 5203",
         "instructors": "Abbott",
         "days": "TR",
         "time_of_day": "10:45AM-12:05PM",
@@ -242,7 +242,7 @@
         "anticipated_enrollment": 5
     },
     {
-        "course_number": "CH EN 5205-SmartSys",
+        "course_number": "CH EN 5205",
         "instructors": "Powell",
         "days": "TR",
         "time_of_day": "07:30AM-08:50AM",
@@ -253,7 +253,7 @@
         "anticipated_enrollment": 20
     },
     {
-        "course_number": "CH EN 5253-Design II",
+        "course_number": "CH EN 5253",
         "instructors": "Wagner",
         "days": "MW",
         "time_of_day": "11:50AM-01:10PM",
@@ -264,7 +264,7 @@
         "anticipated_enrollment": 60
     },
     {
-        "course_number": "CH EN 5254-Product",
+        "course_number": "CH EN 5254",
         "instructors": "Skliar; Porter",
         "days": "MWF",
         "time_of_day": "08:35AM-09:25AM",
@@ -275,10 +275,10 @@
         "anticipated_enrollment": 60
     },
     {
-        "course_number": "CH EN 3780-Sust",
-        "instructors": "Firth; Wagner",
+        "course_number": "CH EN 5840",
+        "instructors": "Wang",
         "days": "TR",
-        "time_of_day": "02:00PM-03:20PM",
+        "time_of_day": "09:10AM-10:30AM",
         "duration": 80.0,
         "location": "TBA",
         "type": "Elective",
@@ -286,10 +286,10 @@
         "anticipated_enrollment": 30
     },
     {
-        "course_number": "CH EN 5840-Nano",
-        "instructors": "Wang",
+        "course_number": "CH EN 5960-Sust",
+        "instructors": "Firth; Wagner",
         "days": "TR",
-        "time_of_day": "09:10AM-10:30AM",
+        "time_of_day": "02:00PM-03:20PM",
         "duration": 80.0,
         "location": "TBA",
         "type": "Elective",
@@ -315,7 +315,7 @@
         "duration": 80.0,
         "location": "TBA",
         "type": "Year 2",
-        "notes": "-",
+        "notes": "Not in CLSS yet",
         "anticipated_enrollment": 45
     },
     {
@@ -326,7 +326,7 @@
         "duration": 50.0,
         "location": "TBA",
         "type": "Elective",
-        "notes": "-",
+        "notes": "Not in CLSS yet",
         "anticipated_enrollment": 20
     },
     {
@@ -337,7 +337,7 @@
         "duration": 80.0,
         "location": "TBA",
         "type": "Elective",
-        "notes": "-",
+        "notes": "Not in CLSS yet",
         "anticipated_enrollment": 20
     },
     {
@@ -348,7 +348,7 @@
         "duration": 50.0,
         "location": "TBA",
         "type": "Elective",
-        "notes": "-",
+        "notes": "Not in CLSS yet",
         "anticipated_enrollment": 20
     },
     {
