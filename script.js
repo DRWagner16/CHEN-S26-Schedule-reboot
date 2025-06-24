@@ -346,12 +346,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('metric-total-hrs').textContent = (totalWeeklyMinutes / 60).toFixed(1);
     }
     
-    // --- THIS IS THE FINAL, CORRECTED FUNCTION FOR THE FLOATING TOOLTIP ---
     function placeCourseOnCalendar(course, day, width = 100, left = 0) {
         const column = document.querySelector(`.day-content[data-day="${day}"]`);
         if (!column) return;
-    
-        // This is a reference to the single, global tooltip you added to your HTML
         const tooltip = document.getElementById('course-tooltip');
         
         const minutesSinceCalendarStart = course.startMinutes - (START_HOUR * 60);
@@ -371,14 +368,11 @@ document.addEventListener('DOMContentLoaded', () => {
         eventDiv.style.backgroundColor = color;
         eventDiv.style.borderColor = color;
     
-        // The course block no longer contains its own tooltip
         eventDiv.innerHTML = `<div class="event-title">${course.course_number}</div>`;
                 
         column.appendChild(eventDiv);
         
-        // Mouse events for the floating tooltip
         eventDiv.addEventListener('mouseover', () => {
-            // When hovering, populate the global tooltip with this event's data
             tooltip.innerHTML = `
                 <strong>Course:</strong> ${course.course_number}<br>
                 <strong>Instructor:</strong> ${course.instructors}<br>
@@ -389,18 +383,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 ${course.notes ? `<strong>Notes:</strong> ${course.notes}<br>` : ''}
                 ${course.anticipated_enrollment ? `<strong>Anticipated Enrollment:</strong> ${course.anticipated_enrollment}` : ''}
             `;
-            // And make it visible
             tooltip.style.display = 'block';
         });
     
         eventDiv.addEventListener('mouseout', () => {
-            // When the mouse leaves, hide the tooltip
             tooltip.style.display = 'none';
-            tooltip.innerHTML = ''; // Clear the content
+            tooltip.innerHTML = '';
         });
     
         eventDiv.addEventListener('mousemove', (e) => {
-            // Make the tooltip follow the cursor with a slight offset
             tooltip.style.left = e.pageX + 15 + 'px';
             tooltip.style.top = e.pageY + 15 + 'px';
         });
