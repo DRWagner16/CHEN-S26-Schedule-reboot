@@ -7,7 +7,7 @@
         "duration": 80.0,
         "location": "TBA",
         "type": "Year 1",
-        "notes": "Test",
+        "notes": "",
         "anticipated_enrollment": 18
     },
     {
@@ -18,7 +18,7 @@
         "duration": 50.0,
         "location": "MEB 1292",
         "type": "Year 1",
-        "notes": "Test",
+        "notes": "",
         "anticipated_enrollment": 18
     },
     {
@@ -29,7 +29,7 @@
         "duration": 50.0,
         "location": "TBA",
         "type": "Year 1",
-        "notes": "This is a note",
+        "notes": "",
         "anticipated_enrollment": 75
     },
     {
@@ -40,29 +40,29 @@
         "duration": 175.0,
         "location": "MEB 1292",
         "type": "Year 1",
-        "notes": "This is a note",
+        "notes": "",
         "anticipated_enrollment": 30
     },
     {
         "course_number": "CH EN 1705-Lab-003",
         "instructors": "Butterfield; Firth; Mohanty",
         "days": "F",
-        "time_of_day": "09:40AM-12:40PM",
+        "time_of_day": "11:50AM-02:50PM",
         "duration": 180.0,
         "location": "MEB 1292",
         "type": "Year 1",
-        "notes": "This is a note",
+        "notes": "Instructor wants to change time",
         "anticipated_enrollment": 30
     },
     {
         "course_number": "CH EN 1705-Lab-004",
         "instructors": "Butterfield; Firth; Mohanty",
         "days": "F",
-        "time_of_day": "02:00PM-05:00PM",
-        "duration": 180.0,
+        "time_of_day": "03:05PM-06:00PM",
+        "duration": 175.0,
         "location": "MEB 1292",
         "type": "Year 1",
-        "notes": "This is a note",
+        "notes": "Instructor wants to change time",
         "anticipated_enrollment": 15
     },
     {
@@ -255,9 +255,9 @@
     {
         "course_number": "CH EN 5253",
         "instructors": "Wagner",
-        "days": "MW",
-        "time_of_day": "11:50AM-01:10PM",
-        "duration": 80.0,
+        "days": "MWF",
+        "time_of_day": "08:35AM-09:25AM",
+        "duration": 50.0,
         "location": "TBA",
         "type": "Year 4",
         "notes": "Moved so students can take Product Design as well.",
@@ -289,11 +289,11 @@
         "course_number": "CH EN 5960-Sust",
         "instructors": "Firth; Wagner",
         "days": "TR",
-        "time_of_day": "02:00PM-03:20PM",
+        "time_of_day": "12:25PM-01:45PM",
         "duration": 80.0,
         "location": "TBA",
         "type": "Elective",
-        "notes": "6000-level gradaute course offered at same time.",
+        "notes": "Instructor wants to change time. 6000-level gradaute course offered at same time.",
         "anticipated_enrollment": 30
     },
     {
