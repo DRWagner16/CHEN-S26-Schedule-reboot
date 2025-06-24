@@ -1,76 +1,96 @@
-# In convert_excel.py
-
 import pandas as pd
 import json
+import gspread
+from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
+import os
 
+# --- THIS FUNCTION REMAINS THE SAME ---
 def calculate_duration(time_str):
-    """Calculates the duration of a class in minutes from a time string."""
     if pd.isna(time_str) or time_str == "TBA" or '-' not in str(time_str):
         return None
     try:
         time_str = str(time_str).replace("AM", " AM").replace("PM", " PM")
         start_time_str, end_time_str = time_str.split('-')
         time_format = "%I:%M %p"
-        
         start_time = datetime.strptime(start_time_str.strip(), time_format)
         end_time = datetime.strptime(end_time_str.strip(), time_format)
-        
         duration = (end_time - start_time).total_seconds() / 60
         return int(duration)
     except (ValueError, AttributeError):
         return None
 
-def convert_to_json():
+def convert_gsheet_to_json():
     """
-    Reads the user-provided Excel schedule, processes the data,
-    and saves it to schedule.json.
+    Reads data from a Google Sheet, processes it, and saves it to a JSON file.
     """
-    ########## THESE FILES ARE UPDATED FOR EVERY SEMESTER ##########
-    input_excel_file = 'Spring2026_Schedule.xlsx'
+    ########## UPDATE THESE VALUES FOR YOUR SETUP ##########
+    # The exact name of your Google Sheet
+    google_sheet_name = 'Teaching Assignments 2025-2026' 
+    # The name of the worksheet (tab) within that sheet
+    worksheet_name = 'S26CLSS' 
+    # The name of the output file for the website
     output_json_file = 'S26schedule.json'
+    ########################################################
 
     try:
-        print(f"[INFO] Reading data from '{input_excel_file}'...")
-        df = pd.read_excel(input_excel_file)
-        
-        # --- CHANGE #1: The line combining COURSE and SECTION is removed ---
-        # The 'COURSE' column is now used directly as the course_number.
+        print("[INFO] Authenticating with Google Sheets API...")
+        # Get the API key from the GitHub Secret
+        google_creds_json = os.environ['GCP_SA_KEY']
+        google_creds_dict = json.loads(google_creds_json)
+
+        scope = ['https://spreadsheets.google.com/feeds', 'https://www.googleapis.com/auth/drive']
+        creds = ServiceAccountCredentials.from_json_keyfile_dict(google_creds_dict, scope)
+        client = gspread.authorize(creds)
+
+        print(f"[INFO] Reading data from Google Sheet: '{google_sheet_name}'...")
+        sheet = client.open(google_sheet_name).worksheet(worksheet_name)
+        data = sheet.get_all_records()
+        df = pd.DataFrame(data)
+
+        # --- The rest of the processing logic is the same as before ---
         print("[INFO] Setting course number...")
         df['course_number'] = df['COURSE'].astype(str)
 
         print("[INFO] Calculating class durations...")
         df['duration'] = df['TIME'].apply(calculate_duration)
-        
-        # Map your column names to the JSON keys the calendar expects
+
+        print("[INFO] Identifying and cleaning up unscheduled courses...")
+        unscheduled_mask = df['duration'].isnull()
+        df.loc[unscheduled_mask, 'TIME'] = 'Online/Asynchronous'
+        df.loc[unscheduled_mask, 'DAYS'] = ''
+
         df = df.rename(columns={
-            'INSTRUCTOR': 'instructors',
-            'DAYS': 'days',
-            'TIME': 'time_of_day',
-            'LOCATION': 'location',
-            'TYPE': 'type'
+            'INSTRUCTOR': 'instructors', 'DAYS': 'days', 'TIME': 'time_of_day',
+            'LOCATION': 'location', 'TYPE': 'type', 'NOTES': 'notes',
+            'ENROLL': 'anticipated_enrollment'
         })
-        
-        # Select only the columns we need for the final JSON
-        final_columns = ['course_number', 'instructors', 'days', 'time_of_day', 'duration', 'location', 'type']
+
+        final_columns = [
+            'course_number', 'instructors', 'days', 'time_of_day', 'duration', 
+            'location', 'type', 'notes', 'anticipated_enrollment'
+        ]
+        # Ensure all required columns exist, adding them if they don't
+        for col in final_columns:
+            if col not in df.columns:
+                df[col] = ''
         df_final = df[final_columns]
-        
+
+        df_final = df_final.fillna({
+            'instructors': 'TBD', 'days': '', 'time_of_day': 'TBD',
+            'location': 'TBD', 'type': 'N/A', 'notes': '',
+            'anticipated_enrollment': 0, 'duration': 0
+        })
+
         schedule_data = df_final.to_dict(orient='records')
-        
+
         with open(output_json_file, 'w') as f:
             json.dump(schedule_data, f, indent=4)
-            
+
         print(f"\n[SUCCESS] Conversion complete! Data saved to '{output_json_file}'.")
 
-    except FileNotFoundError:
-        print(f"[FATAL] Error: The file '{input_excel_file}' was not found.")
-    except KeyError as e:
-        # --- CHANGE #2: The error message is updated to remove 'SECTION' ---
-        print(f"[FATAL] A required column was not found in the Excel file: {e}")
-        print("[INFO] Please ensure your column headers include: COURSE, INSTRUCTOR, DAYS, TIME, LOCATION, TYPE")
     except Exception as e:
         print(f"[FATAL] An unexpected error occurred: {e}")
 
-
 if __name__ == "__main__":
-    convert_to_json()
+    convert_gsheet_to_json()
