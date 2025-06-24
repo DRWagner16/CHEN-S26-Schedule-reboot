@@ -138,10 +138,10 @@ h1, h2, h3 {
 }
 /* --- Corrected Smart Tooltip Styles --- */
 
-.class-event:hover .event-tooltip {
+/* .class-event:hover .event-tooltip { */
     /* This rule should be removed if it exists, as JS now handles visibility */
-    display: none; 
-}
+    /* display: none; */
+/*}*/
 
 .event-tooltip {
     display: none; /* Hidden by default */
