@@ -121,47 +121,50 @@ h1, h2, h3 {
     font-size: 12px; 
     color: #777;
 }
+
+/* --- THIS IS THE FIRST FIX --- */
 .class-event { 
     position: absolute;
+    position: relative; /* This establishes the positioning context for the tooltip */
     border-radius: 4px; 
     padding: 4px; 
     box-sizing: border-box; 
     font-size: 11px; 
     box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
-    z-index: 10; 
+    z-index: 10; /* Default stacking order */
     cursor: pointer; 
-    /* The "overflow: hidden;" property was removed from here */
 }
+
+/* --- THIS IS THE SECOND FIX --- */
+.class-event:hover {
+    z-index: 20; /* Brings the hovered event (and its tooltip) to the front */
+}
+
 .event-title { 
     font-weight: bold; 
     white-space: nowrap; 
     overflow: hidden; 
     text-overflow: ellipsis; 
 }
-/* --- Smart Tooltip Styles --- */
 .event-tooltip {
-    display: none; /* Hidden by default, visibility is now handled by JavaScript */
+    display: none;
     position: absolute;
     top: 0;
-    left: 102%; /* Default position is to the right of the course block */
+    left: 102%;
     width: 200px;
     background-color: #333;
     color: #fff;
     padding: 8px;
     border-radius: 6px;
     z-index: 1000;
-    pointer-events: none; /* Prevents tooltip from interfering with other mouse events */
+    pointer-events: none;
     font-size: 0.85em;
     line-height: 1.4;
 }
-
-/* This class will be added by JavaScript to flip the tooltip to the left */
 .event-tooltip.tooltip-left {
-    left: auto; /* Deactivate the left positioning */
-    right: 102%; /* Position it to the left of the course block */
+    left: auto;
+    right: 102%;
 }
-
-/* This class will be added by JavaScript to make the tooltip visible */
 .event-tooltip.tooltip-visible {
     display: block;
 }
