@@ -155,7 +155,7 @@ h3 {
     overflow: hidden; 
     text-overflow: ellipsis; 
 }
-.event-tooltip { 
+/*.event-tooltip { 
     display: none; 
     position: absolute; 
     top: 100%; 
@@ -170,9 +170,31 @@ h3 {
     line-height: 1.4; 
     pointer-events: none; 
 }
-/* --- Tooltip Base Styles --- */
+    /* --- Tooltip Base Styles --- */
+    .event-tooltip {
+        display: none; /* Hidden by default */
+        position: absolute;
+        top: 0;
+        left: 102%; /* Appears on the right side by default */
+        width: 220px;
+        background-color: #333;
+        color: #fff;
+        padding: 10px;
+        border-radius: 6px;
+        z-index: 100;
+        pointer-events: none; /* Prevents the tooltip from interfering with other hovers */
+        font-size: 0.9em;
+        line-height: 1.4;
+    }
+   
+    }
+    .event-tooltip strong { 
+        color: #a3c4f3; 
+    }
+*/
+/* --- Smart Tooltip Styles --- */
 .event-tooltip {
-    display: none; /* Hidden by default */
+    display: none; /* Hidden by default, shown by JavaScript */
     position: absolute;
     top: 0;
     left: 102%; /* Appears on the right side by default */
@@ -182,25 +204,21 @@ h3 {
     padding: 10px;
     border-radius: 6px;
     z-index: 100;
-    pointer-events: none; /* Prevents the tooltip from interfering with other hovers */
+    pointer-events: none;
     font-size: 0.9em;
     line-height: 1.4;
 }
 
-/* New class to flip the tooltip to the left */
+/* This class flips the tooltip to the left */
 .event-tooltip.tooltip-left {
-    left: auto; /* Turn off the default left positioning */
-    right: 102%; /* Position it on the left side */
+    left: auto;
+    right: 102%;
 }
 
-/* New class to make the tooltip visible */
+/* This class makes the tooltip visible */
 .event-tooltip.tooltip-visible {
     display: block;
 }
-.event-tooltip strong { 
-    color: #a3c4f3; 
-}
-
 /* Add this to the end of style.css */
 
 .link-button {
@@ -355,7 +373,7 @@ h3 {
     position: relative; 
     
     /* This creates the repeating horizontal lines */
-    background-image: linear-gradient(to bottom, #e8e8e8 1px, transparent 1px);
+    background-image: linear-gradient(to bottom, #e8e8e8 2px, transparent 1px);
     background-size: 100% 60px; /* Repeats a 60px tall block, with a 1px line at the top */
 }
 .intermediate-values {
