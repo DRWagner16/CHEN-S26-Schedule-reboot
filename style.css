@@ -146,27 +146,19 @@ h1, h2, h3 {
     overflow: hidden; 
     text-overflow: ellipsis; 
 }
+/* --- NEW: Floating Tooltip Styles --- */
 .event-tooltip {
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 102%;
-    width: 200px;
+    display: none; /* Hidden by default */
+    position: fixed; /* Positions relative to the viewport, so it can't be trapped */
     background-color: #333;
     color: #fff;
-    padding: 8px;
+    padding: 8px 12px;
     border-radius: 6px;
-    z-index: 1000;
-    pointer-events: none;
-    font-size: 0.85em;
-    line-height: 1.4;
-}
-.event-tooltip.tooltip-left {
-    left: auto;
-    right: 102%;
-}
-.event-tooltip.tooltip-visible {
-    display: block;
+    z-index: 1000; /* Ensures it's on top of everything */
+    pointer-events: none; /* Prevents the tooltip from interfering with the mouse */
+    font-size: 0.9em;
+    line-height: 1.5;
+    max-width: 250px;
 }
 .course-table-container, .unscheduled-courses-container, .metrics-dashboard {
     width: 100%;
