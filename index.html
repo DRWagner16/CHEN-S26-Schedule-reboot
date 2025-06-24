@@ -12,7 +12,7 @@
     <div class="page-container"> 
         
         <h1>Spring 2026 CH EN Course Schedule - REBOOT</h1>
-        <h2 style="color: #BE0000;">Only courses that use campus rooms are in the calendar</h2>
+        <h2 style="color: #BE0000;">Only courses that use campus rooms are below</h2>
         <h3>Hover over a course for more information</h3>
 
         <div class="filters">
@@ -65,7 +65,7 @@
         </div>
         
         <div class="course-table-container">
-            <h2>CH EN Course List (filters applied)</h2>
+            <h2>CH EN Course List</h2>
             <table class="course-table">
                 <thead>
                     <tr>
@@ -75,39 +75,34 @@
                         <th>Days</th>
                         <th>Instructor(s)</th>
                         <th>Location(s)</th>
-                        <th>Anticipated Enrollment</th>
+                        <th>Enrollment</th>
                         <th>Notes</th>
                     </tr>
                 </thead>
-                <tbody id="course-table-body">
-                    </tbody>
+                <tbody id="course-table-body"></tbody>
             </table>
         </div>
 
         <div class="unscheduled-courses-container">
-            <h2>Courses Without Fixed Schedules (filters appiled)</h2>
+            <h2>Courses Without Fixed Schedules</h2>
             <ul id="unscheduled-courses-list"></ul>
         </div>
 
         <div class="metrics-dashboard">
             <h2>Schedule Analysis</h2>
-            
             <div class="metric-section">
                 <h4>MEB Room Usage (hrs/week) - Includes ENGIN 1022 Usage</h4>
                 <div class="metric-item">MEB 1292: <strong id="metric-meb-1292">0.0</strong></div>
                 <div class="metric-item">MEB 2550: <strong id="metric-meb-2550">0.0</strong></div>
                 <div class="metric-item">MEB 3520: <strong id="metric-meb-3520">0.0</strong></div>
             </div>
-        
             <hr style="margin: 20px 0;">
-        
             <div class="metric-section">
                 <h4>Prime Time Analysis (9am - 1:59pm)</h4>
                 <p style="font-size: 0.9em; color: #555;">(% of total schedulable undergrad CH EN courses)</p>
                 <div class="metric-item">Courses with a MWF component starting in Prime Time: <strong id="metric-mwf-prime-pct">0</strong>%</div>
                 <div class="metric-item">Courses with a TR component starting in Prime Time: <strong id="metric-tr-prime-pct">0</strong>%</div>
                 <div class="metric-item">Total Courses starting in Prime Time (M-F): <strong id="metric-mf-prime-pct">0</strong>%</div>
-                
                 <div class="intermediate-values">
                     <hr>
                     <p><strong>Calculation Values:</strong></p>
@@ -117,9 +112,7 @@
                     <span class="metric-item-small">Total Schedulable CH EN Courses: <strong id="metric-total-chen-courses">0</strong></span>
                 </div>
             </div>
-        
             <hr style="margin: 20px 0;">
-        
             <div class="metric-section">
                 <h4>Daily Time Distribution</h4>
                 <div class="metric-item">Monday: <strong id="metric-mo-hrs">0.0</strong> hrs (<strong id="metric-mo-pct">0</strong>%)</div>
