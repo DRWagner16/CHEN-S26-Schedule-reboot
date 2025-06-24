@@ -268,22 +268,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MODIFIED --- This function now uses Sets to prevent double-counting
     function calculateAndDisplayMetrics(courses) {
         const primeTimeStart = 9 * 60;
         const primeTimeEnd = 13 * 60 + 59;
-        
         let mebRoomUsageMinutes = { "MEB 1292": 0, "MEB 2550": 0, "MEB 3520": 0 };
         let dailyMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
-        
-        // --- NEW: Use Sets to store unique course numbers ---
-        const uniqueSchedulableChenCourses = new Set();
+        const uniqueChenCourses = new Set();
         const mwfPrimeTimeCoursesSet = new Set();
         const trPrimeTimeCoursesSet = new Set();
         const mfPrimeTimeCoursesSet = new Set();
 
         courses.forEach(course => {
-            // MEB Room usage (for CH EN or ENGIN)
             if (course.course_number.startsWith("CH EN") || course.course_number.startsWith("ENGIN")) {
                 if (course.duration && course.days) {
                     const courseLocations = (course.location || '').split(';').map(l => l.trim());
@@ -294,50 +289,37 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 }
             }
-
-            // --- All following metrics are for schedulable, undergrad CH EN courses only ---
             if (!course.course_number.startsWith("CH EN")) return;
             const courseNumStr = course.course_number.replace("CH EN", "").trim();
             const courseNum = parseInt(courseNumStr, 10);
             if (isNaN(courseNum) || courseNum < 1000 || courseNum > 5999) return;
             
-            // Add the course to the set of unique schedulable courses (for the denominator)
-            uniqueSchedulableChenCourses.add(course.course_number);
+            uniqueChenCourses.add(course.course_number);
 
             const startsInPrimeTime = course.startMinutes >= primeTimeStart && course.startMinutes <= primeTimeEnd;
             if (startsInPrimeTime) {
-                // Add the course number to the appropriate Set. Duplicates will be ignored.
                 mfPrimeTimeCoursesSet.add(course.course_number);
-                
                 const isMwfCourse = course.days.includes('M') || course.days.includes('W') || course.days.includes('F');
                 const isTrCourse = course.days.includes('T') || course.days.includes('R');
-                
                 if (isMwfCourse) mwfPrimeTimeCoursesSet.add(course.course_number);
                 if (isTrCourse) trPrimeTimeCoursesSet.add(course.course_number);
             }
             
-            // Calculate daily hours for the summary table
             for (const dayChar of course.days) {
                 const dayCode = dayMap[dayChar];
-                if (dayCode) {
-                    dailyMinutes[dayCode] += course.duration;
-                }
+                if (dayCode) dailyMinutes[dayCode] += course.duration;
             }
         });
 
-        // --- Final Calculations & Display ---
-        // Get the counts from the size of the Sets
-        const totalSchedulableChenCourses = uniqueSchedulableChenCourses.size;
+        const totalSchedulableChenCourses = uniqueChenCourses.size;
         const mwfPrimeTimeCourseCount = mwfPrimeTimeCoursesSet.size;
         const trPrimeTimeCourseCount = trPrimeTimeCoursesSet.size;
         const mfPrimeTimeCourseCount = mfPrimeTimeCoursesSet.size;
-
         const totalWeeklyMinutes = Object.values(dailyMinutes).reduce((sum, mins) => sum + mins, 0);
 
         document.getElementById('metric-meb-1292').textContent = (mebRoomUsageMinutes["MEB 1292"] / 60).toFixed(1);
         document.getElementById('metric-meb-2550').textContent = (mebRoomUsageMinutes["MEB 2550"] / 60).toFixed(1);
         document.getElementById('metric-meb-3520').textContent = (mebRoomUsageMinutes["MEB 3520"] / 60).toFixed(1);
-
         const mwfPrimePercentage = (totalSchedulableChenCourses > 0) ? (mwfPrimeTimeCourseCount / totalSchedulableChenCourses) * 100 : 0;
         const trPrimePercentage = (totalSchedulableChenCourses > 0) ? (trPrimeTimeCourseCount / totalSchedulableChenCourses) * 100 : 0;
         const mfPrimePercentage = (totalSchedulableChenCourses > 0) ? (mfPrimeTimeCourseCount / totalSchedulableChenCourses) * 100 : 0;
@@ -356,16 +338,15 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('metric-we-hrs').textContent = (dailyMinutes.We / 60).toFixed(1);
         document.getElementById('metric-th-hrs').textContent = (dailyMinutes.Th / 60).toFixed(1);
         document.getElementById('metric-fr-hrs').textContent = (dailyMinutes.Fr / 60).toFixed(1);
-
         document.getElementById('metric-mo-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Mo / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-tu-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Tu / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-we-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.We / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-th-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Th / totalWeeklyMinutes) * 100 : 0).toFixed(0);
         document.getElementById('metric-fr-pct').textContent = (totalWeeklyMinutes > 0 ? (dailyMinutes.Fr / totalWeeklyMinutes) * 100 : 0).toFixed(0);
-
         document.getElementById('metric-total-hrs').textContent = (totalWeeklyMinutes / 60).toFixed(1);
     }
     
+    // --- MODIFIED --- This function has the correct event listeners restored
     function placeCourseOnCalendar(course, day, width = 100, left = 0) {
         const column = document.querySelector(`.day-content[data-day="${day}"]`);
         if (!column) return;
@@ -402,6 +383,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
         column.appendChild(eventDiv);
         
+        // Event listeners for smart tooltip positioning
         eventDiv.addEventListener('mouseover', () => {
             const tooltip = eventDiv.querySelector('.event-tooltip');
             tooltip.classList.add('tooltip-visible');
