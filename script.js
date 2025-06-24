@@ -266,22 +266,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- MODIFIED --- This function has the final metric definitions
+    // --- MODIFIED --- This function now calculates and displays the intermediate count values
     function calculateAndDisplayMetrics(courses) {
         const primeTimeStart = 9 * 60;
         const primeTimeEnd = 13 * 60 + 59;
-        
         let mebRoomUsageMinutes = { "MEB 1292": 0, "MEB 2550": 0, "MEB 3520": 0 };
         let dailyMinutes = { Mo: 0, Tu: 0, We: 0, Th: 0, Fr: 0 };
         
-        // --- NEW: Counters for new metric definitions ---
         let totalSchedulableChenCourses = 0;
         let mwfPrimeTimeCourseCount = 0;
         let trPrimeTimeCourseCount = 0;
         let mfPrimeTimeCourseCount = 0;
 
         courses.forEach(course => {
-            // MEB Room usage calculation (for CH EN or ENGIN)
             if (course.course_number.startsWith("CH EN") || course.course_number.startsWith("ENGIN")) {
                 if (course.duration && course.days) {
                     const courseLocations = (course.location || '').split(';').map(l => l.trim());
@@ -293,43 +290,34 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
 
-            // --- All following metrics are for schedulable, undergrad CH EN courses only ---
             if (!course.course_number.startsWith("CH EN")) return;
             const courseNumStr = course.course_number.replace("CH EN", "").trim();
             const courseNum = parseInt(courseNumStr, 10);
             if (isNaN(courseNum) || courseNum < 1000 || courseNum > 5999) return;
             
-            // This course is a valid undergrad CH EN course, so increment the total count
             totalSchedulableChenCourses++;
 
             const startsInPrimeTime = course.startMinutes >= primeTimeStart && course.startMinutes <= primeTimeEnd;
             if (startsInPrimeTime) {
-                mfPrimeTimeCourseCount++; // Increment the total M-F counter
-                
+                mfPrimeTimeCourseCount++;
                 const isMwfCourse = course.days.includes('M') || course.days.includes('W') || course.days.includes('F');
                 const isTrCourse = course.days.includes('T') || course.days.includes('R');
-                
                 if (isMwfCourse) mwfPrimeTimeCourseCount++;
                 if (isTrCourse) trPrimeTimeCourseCount++;
             }
             
-            // Calculate daily hours for the summary table
             for (const dayChar of course.days) {
                 const dayCode = dayMap[dayChar];
-                if (dayCode) {
-                    dailyMinutes[dayCode] += course.duration;
-                }
+                if (dayCode) dailyMinutes[dayCode] += course.duration;
             }
         });
 
-        // --- Final Calculations & Display ---
         const totalWeeklyMinutes = Object.values(dailyMinutes).reduce((sum, mins) => sum + mins, 0);
-
+        
         document.getElementById('metric-meb-1292').textContent = (mebRoomUsageMinutes["MEB 1292"] / 60).toFixed(1);
         document.getElementById('metric-meb-2550').textContent = (mebRoomUsageMinutes["MEB 2550"] / 60).toFixed(1);
         document.getElementById('metric-meb-3520').textContent = (mebRoomUsageMinutes["MEB 3520"] / 60).toFixed(1);
 
-        // Calculate percentages using the single, universal denominator
         const mwfPrimePercentage = (totalSchedulableChenCourses > 0) ? (mwfPrimeTimeCourseCount / totalSchedulableChenCourses) * 100 : 0;
         const trPrimePercentage = (totalSchedulableChenCourses > 0) ? (trPrimeTimeCourseCount / totalSchedulableChenCourses) * 100 : 0;
         const mfPrimePercentage = (totalSchedulableChenCourses > 0) ? (mfPrimeTimeCourseCount / totalSchedulableChenCourses) * 100 : 0;
@@ -338,7 +326,12 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('metric-tr-prime-pct').textContent = trPrimePercentage.toFixed(0);
         document.getElementById('metric-mf-prime-pct').textContent = mfPrimePercentage.toFixed(0);
 
-        // Display Daily Distribution
+        // --- NEW: Display the intermediate calculation values ---
+        document.getElementById('metric-mwf-prime-count').textContent = mwfPrimeTimeCourseCount;
+        document.getElementById('metric-tr-prime-count').textContent = trPrimeTimeCourseCount;
+        document.getElementById('metric-mf-prime-count').textContent = mfPrimeTimeCourseCount;
+        document.getElementById('metric-total-chen-courses').textContent = totalSchedulableChenCourses;
+
         document.getElementById('metric-mo-hrs').textContent = (dailyMinutes.Mo / 60).toFixed(1);
         document.getElementById('metric-tu-hrs').textContent = (dailyMinutes.Tu / 60).toFixed(1);
         document.getElementById('metric-we-hrs').textContent = (dailyMinutes.We / 60).toFixed(1);
