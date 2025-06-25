@@ -68,8 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function courseToHslColor(course) {
         const typeBaseHues = {
-            'Year 1': 210, 'Year 2': 120, 'Year 3': 50,
-            'Year 4': 0, 'Elective': 280, 'Graduate': 30, 'Other': 300,
+            'First-year': 210, 'Sophomore': 120, 'Junior': 50,
+            'Senior': 0, 'Elective': 280, 'Graduate': 30, 'Other': 300,
         };
         const primaryType = (course.type || '').split(';')[0].trim();
         let baseHue = typeBaseHues[primaryType] ?? 0;
