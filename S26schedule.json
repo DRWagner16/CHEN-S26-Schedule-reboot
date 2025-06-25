@@ -6,7 +6,7 @@
         "time_of_day": "09:10AM-10:30AM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Year 1; CLSS",
+        "type": "First-year; CLSS",
         "notes": "",
         "anticipated_enrollment": 18
     },
@@ -17,7 +17,7 @@
         "time_of_day": "10:45AM-11:35AM",
         "duration": 50.0,
         "location": "MEB 1292",
-        "type": "Year 1; CLSS",
+        "type": "First-year; CLSS",
         "notes": "",
         "anticipated_enrollment": 18
     },
@@ -28,7 +28,7 @@
         "time_of_day": "10:45AM-11:35AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 1; CLSS",
+        "type": "First-year; CLSS",
         "notes": "",
         "anticipated_enrollment": 75
     },
@@ -39,7 +39,7 @@
         "time_of_day": "09:10AM-12:05PM",
         "duration": 175.0,
         "location": "MEB 1292",
-        "type": "Year 1; CLSS",
+        "type": "First-year; CLSS",
         "notes": "",
         "anticipated_enrollment": 30
     },
@@ -50,7 +50,7 @@
         "time_of_day": "09:40AM-12:40PM",
         "duration": 180.0,
         "location": "MEB 1292",
-        "type": "Year 1; CLSS",
+        "type": "First-year; CLSS",
         "notes": "Instructor wants to change time",
         "anticipated_enrollment": 30
     },
@@ -61,7 +61,7 @@
         "time_of_day": "02:00PM-05:00PM",
         "duration": 180.0,
         "location": "MEB 1292",
-        "type": "Year 1; CLSS",
+        "type": "First-year; CLSS",
         "notes": "Instructor wants to change time",
         "anticipated_enrollment": 15
     },
@@ -72,7 +72,7 @@
         "time_of_day": "02:00PM-03:20PM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Year 2; CLSS",
+        "type": "Sophomore; CLSS",
         "notes": "-",
         "anticipated_enrollment": 60
     },
@@ -83,7 +83,7 @@
         "time_of_day": "09:40AM-10:30AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 2; CLSS",
+        "type": "Sophomore; CLSS",
         "notes": "-",
         "anticipated_enrollment": 60
     },
@@ -105,7 +105,7 @@
         "time_of_day": "09:40AM-10:30AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 4; CLSS",
+        "type": "Senior; CLSS",
         "notes": "-",
         "anticipated_enrollment": 35
     },
@@ -116,7 +116,7 @@
         "time_of_day": "11:50AM-01:10PM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Year 3; CLSS",
+        "type": "Junior; CLSS",
         "notes": "-",
         "anticipated_enrollment": 60
     },
@@ -127,7 +127,7 @@
         "time_of_day": "08:35AM-09:25AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 3; CLSS",
+        "type": "Junior; CLSS",
         "notes": "-",
         "anticipated_enrollment": 60
     },
@@ -138,7 +138,7 @@
         "time_of_day": "02:00PM-05:00PM",
         "duration": 180.0,
         "location": "MEB 2550; MEB 3520",
-        "type": "Year 3; CLSS",
+        "type": "Junior; CLSS",
         "notes": "-",
         "anticipated_enrollment": 27
     },
@@ -149,7 +149,7 @@
         "time_of_day": "02:00PM-05:00PM",
         "duration": 180.0,
         "location": "MEB 3520; MEB 2550",
-        "type": "Year 3; CLSS",
+        "type": "Junior; CLSS",
         "notes": "-",
         "anticipated_enrollment": 27
     },
@@ -160,7 +160,7 @@
         "time_of_day": "12:55PM-01:45PM",
         "duration": 50.0,
         "location": "MEB 1292",
-        "type": "Year 4; CLSS",
+        "type": "Senior; CLSS",
         "notes": "-",
         "anticipated_enrollment": 30
     },
@@ -171,7 +171,7 @@
         "time_of_day": "02:00PM-05:00PM",
         "duration": 180.0,
         "location": "MEB 1292; MEB 2550; MEB 3520",
-        "type": "Year 4; CLSS",
+        "type": "Senior; CLSS",
         "notes": "-",
         "anticipated_enrollment": 30
     },
@@ -182,7 +182,7 @@
         "time_of_day": "12:55PM-01:45PM",
         "duration": 50.0,
         "location": "MEB 1292",
-        "type": "Year 4; CLSS",
+        "type": "Senior; CLSS",
         "notes": "-",
         "anticipated_enrollment": 30
     },
@@ -193,7 +193,7 @@
         "time_of_day": "02:00PM-05:00PM",
         "duration": 180.0,
         "location": "MEB 1292; MEB 2550; MEB 3520",
-        "type": "Year 4; CLSS",
+        "type": "Senior; CLSS",
         "notes": "-",
         "anticipated_enrollment": 30
     },
@@ -215,7 +215,7 @@
         "time_of_day": "10:45AM-12:05PM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Year 3; CLSS",
+        "type": "Junior; CLSS",
         "notes": "-",
         "anticipated_enrollment": 30
     },
@@ -248,7 +248,7 @@
         "time_of_day": "08:35AM-09:25AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 4; CLSS",
+        "type": "Senior; CLSS",
         "notes": "Moved so students can take Product Design as well.",
         "anticipated_enrollment": 60
     },
@@ -259,8 +259,8 @@
         "time_of_day": "08:35AM-09:25AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 4; CLSS",
-        "notes": "-",
+        "type": "Senior; CLSS",
+        "notes": "This is currently CH EN 5960-008",
         "anticipated_enrollment": 60
     },
     {
@@ -271,88 +271,88 @@
         "duration": 80.0,
         "location": "TBA",
         "type": "Elective",
-        "notes": "6000-level gradaute course offered at same time.",
+        "notes": "Nano - 6000-level gradaute course offered at same time.",
         "anticipated_enrollment": 30
     },
     {
-        "course_number": "CH EN 5960-Sust",
+        "course_number": "CH EN 5960-007",
         "instructors": "Firth; Wagner",
         "days": "TR",
         "time_of_day": "02:00PM-03:20PM",
         "duration": 80.0,
         "location": "TBA",
         "type": "Elective; CLSS",
-        "notes": "6000-level gradaute course offered at same time.",
+        "notes": "Sust. Eng. - 6000-level gradaute course offered at same time.",
         "anticipated_enrollment": 30
     },
     {
-        "course_number": "CH EN 5960-Bioprocess",
+        "course_number": "CH EN 5960-006",
         "instructors": "Zangle; Skliar",
         "days": "WF",
         "time_of_day": "02:00PM-05:00PM",
         "duration": 180.0,
         "location": "MEB 3520",
         "type": "Elective; CLSS",
-        "notes": "-",
+        "notes": "Bioprocessing - 6000-level gradaute course offered at same time.",
         "anticipated_enrollment": 20
     },
     {
-        "course_number": "CH EN 5960-OChem",
+        "course_number": "CH EN 5960-009",
         "instructors": "Nigra",
         "days": "TR",
         "time_of_day": "09:10AM-10:30AM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Year 2; CLSS",
-        "notes": "",
+        "type": "Sophomore; CLSS",
+        "notes": "Organic Chemistry for Engineers",
         "anticipated_enrollment": 45
     },
     {
-        "course_number": "CH EN 5960-MolSim",
+        "course_number": "CH EN 5960-010",
         "instructors": "Hoepfner",
         "days": "MWF",
         "time_of_day": "10:45AM-11:35AM",
         "duration": 50.0,
         "location": "TBA",
         "type": "Elective",
-        "notes": "",
+        "notes": "Molecular Simulation - 6000-level gradaute course offered at same time.",
         "anticipated_enrollment": 20
     },
     {
-        "course_number": "CH EN 5960-Semicond",
+        "course_number": "CH EN 5960-011",
         "instructors": "Sant",
         "days": "TR",
         "time_of_day": "02:00PM-03:20PM",
         "duration": 80.0,
         "location": "TBA",
         "type": "Elective; CLSS",
-        "notes": "",
+        "notes": "Semiconductor Maunfacturing - 6000-level gradaute course offered at same time.",
         "anticipated_enrollment": 20
     },
     {
-        "course_number": "CH EN 5960-AddMan",
+        "course_number": "CH EN 5960-012",
         "instructors": "Huang",
         "days": "MWF",
         "time_of_day": "02:00PM-02:50PM",
         "duration": 50.0,
         "location": "TBA",
         "type": "Elective; CLSS",
-        "notes": "",
+        "notes": "Additive Manufacturing - 6000-level gradaute course offered at same time.",
         "anticipated_enrollment": 20
     },
     {
-        "course_number": "CH EN 6208-ML",
+        "course_number": "CH EN 6208",
         "instructors": "Faroughi",
         "days": "TR",
         "time_of_day": "02:00PM-03:20PM",
         "duration": 80.0,
         "location": "TBA",
         "type": "Elective",
-        "notes": "-",
+        "notes": "Machine Learning and Optimization",
         "anticipated_enrollment": 15
     },
     {
-        "course_number": "CH EN 6553-GKinetics",
+        "course_number": "CH EN 6553",
         "instructors": "Duan",
         "days": "TR",
         "time_of_day": "10:45AM-12:05PM",
@@ -363,7 +363,7 @@
         "anticipated_enrollment": 30
     },
     {
-        "course_number": "CH EN 6603-GTransport",
+        "course_number": "CH EN 6603",
         "instructors": "Chen",
         "days": "TR",
         "time_of_day": "09:10AM-10:30AM",
@@ -374,7 +374,7 @@
         "anticipated_enrollment": 30
     },
     {
-        "course_number": "CH EN 7755-IntroResearch",
+        "course_number": "CH EN 7755",
         "instructors": "Skliar",
         "days": "T",
         "time_of_day": "12:25PM-01:45PM",
@@ -385,14 +385,14 @@
         "anticipated_enrollment": 25
     },
     {
-        "course_number": "CH EN 7857-GSeminar",
+        "course_number": "CH EN 7857",
         "instructors": "McLennan",
         "days": "F",
-        "time_of_day": "10:45AM-11:45AM",
-        "duration": 60.0,
+        "time_of_day": "10:45AM-11:35AM",
+        "duration": 50.0,
         "location": "TBA",
         "type": "Graduate",
-        "notes": "Course does not meet standard time block",
+        "notes": "",
         "anticipated_enrollment": 20
     },
     {
@@ -457,7 +457,7 @@
         "time_of_day": "07:30AM-08:20AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 1",
+        "type": "First-year",
         "notes": "Discussions not shown - TuTh options",
         "anticipated_enrollment": "Outside ENG"
     },
@@ -468,7 +468,7 @@
         "time_of_day": "09:40AM-10:30AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 1",
+        "type": "First-year",
         "notes": "Discussions not shown - TuTh options",
         "anticipated_enrollment": "Outside ENG"
     },
@@ -479,7 +479,7 @@
         "time_of_day": "09:40AM-10:30AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 1",
+        "type": "First-year",
         "notes": "Discussions not shown - Th options",
         "anticipated_enrollment": "Outside ENG"
     },
@@ -490,7 +490,7 @@
         "time_of_day": "10:45AM-11:35AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 1",
+        "type": "First-year",
         "notes": "Discussions not shown - Th options",
         "anticipated_enrollment": "Outside ENG"
     },
@@ -501,7 +501,7 @@
         "time_of_day": "08:35AM-09:25AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 1",
+        "type": "First-year",
         "notes": "Discussions not shown - Th options",
         "anticipated_enrollment": "Outside ENG"
     },
@@ -512,7 +512,7 @@
         "time_of_day": "02:00PM-02:50PM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 1",
+        "type": "First-year",
         "notes": "Discussions not shown - Th options",
         "anticipated_enrollment": "Outside ENG"
     },
@@ -523,7 +523,7 @@
         "time_of_day": "11:50AM-01:10PM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Year 1",
+        "type": "First-year",
         "notes": "Discussions not shown - TuTh options",
         "anticipated_enrollment": "Outside ENG"
     },
@@ -534,7 +534,7 @@
         "time_of_day": "01:25PM-02:45PM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Year 1",
+        "type": "First-year",
         "notes": "Discussions not shown - TuTh options",
         "anticipated_enrollment": "Outside ENG"
     },
@@ -545,7 +545,7 @@
         "time_of_day": "03:00PM-04:20PM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Year 1",
+        "type": "First-year",
         "notes": "Discussions not shown - TuTh options",
         "anticipated_enrollment": "Outside ENG"
     },
@@ -556,7 +556,7 @@
         "time_of_day": "04:30PM-05:50PM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Year 1",
+        "type": "First-year",
         "notes": "Discussions not shown - TuTh options",
         "anticipated_enrollment": "Outside ENG"
     },
@@ -567,7 +567,7 @@
         "time_of_day": "09:40AM-10:30AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 2",
+        "type": "Sophomore",
         "notes": "Discussions not shown - Tu options",
         "anticipated_enrollment": "Outside ENG"
     },
@@ -578,7 +578,7 @@
         "time_of_day": "10:45AM-11:35AM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Year 2",
+        "type": "Sophomore",
         "notes": "Discussions not shown - Tu options",
         "anticipated_enrollment": "Outside ENG"
     },
