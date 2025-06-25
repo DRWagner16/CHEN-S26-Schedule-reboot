@@ -47,7 +47,7 @@
         "course_number": "CH EN 1705-Lab-003",
         "instructors": "Butterfield; Firth; Mohanty",
         "days": "F",
-        "time_of_day": "11:50AM-02:50PM",
+        "time_of_day": "09:40AM-12:40PM",
         "duration": 180.0,
         "location": "MEB 1292",
         "type": "Year 1; CLSS",
@@ -58,8 +58,8 @@
         "course_number": "CH EN 1705-Lab-004",
         "instructors": "Butterfield; Firth; Mohanty",
         "days": "F",
-        "time_of_day": "03:05PM-06:00PM",
-        "duration": 175.0,
+        "time_of_day": "02:00PM-05:00PM",
+        "duration": 180.0,
         "location": "MEB 1292",
         "type": "Year 1; CLSS",
         "notes": "Instructor wants to change time",
@@ -108,17 +108,6 @@
         "type": "Year 4; CLSS",
         "notes": "-",
         "anticipated_enrollment": 35
-    },
-    {
-        "course_number": "CH EN 3453",
-        "instructors": "Clavijo",
-        "days": "MWF",
-        "time_of_day": "12:55PM-01:45PM",
-        "duration": 50.0,
-        "location": "TBA",
-        "type": "Year 3",
-        "notes": "",
-        "anticipated_enrollment": 10
     },
     {
         "course_number": "CH EN 3553",
@@ -289,11 +278,11 @@
         "course_number": "CH EN 5960-Sust",
         "instructors": "Firth; Wagner",
         "days": "TR",
-        "time_of_day": "12:25PM-01:45PM",
+        "time_of_day": "02:00PM-03:20PM",
         "duration": 80.0,
         "location": "TBA",
         "type": "Elective; CLSS",
-        "notes": "Instructor wants to change time. 6000-level gradaute course offered at same time.",
+        "notes": "6000-level gradaute course offered at same time.",
         "anticipated_enrollment": 30
     },
     {
@@ -315,7 +304,7 @@
         "duration": 80.0,
         "location": "TBA",
         "type": "Year 2",
-        "notes": "Not in CLSS yet",
+        "notes": "",
         "anticipated_enrollment": 45
     },
     {
@@ -326,18 +315,18 @@
         "duration": 50.0,
         "location": "TBA",
         "type": "Elective",
-        "notes": "Not in CLSS yet",
+        "notes": "",
         "anticipated_enrollment": 20
     },
     {
         "course_number": "CH EN 5960-Semicond",
         "instructors": "Sant",
-        "days": "WF",
-        "time_of_day": "03:00PM-04:20PM",
+        "days": "TR",
+        "time_of_day": "02:00PM-03:20PM",
         "duration": 80.0,
         "location": "TBA",
         "type": "Elective",
-        "notes": "Not in CLSS yet",
+        "notes": "",
         "anticipated_enrollment": 20
     },
     {
@@ -348,14 +337,14 @@
         "duration": 50.0,
         "location": "TBA",
         "type": "Elective",
-        "notes": "Not in CLSS yet",
+        "notes": "",
         "anticipated_enrollment": 20
     },
     {
         "course_number": "CH EN 6208-ML",
         "instructors": "Faroughi",
         "days": "TR",
-        "time_of_day": "03:00PM-04:20PM",
+        "time_of_day": "02:00PM-03:20PM",
         "duration": 80.0,
         "location": "TBA",
         "type": "Elective",
@@ -390,7 +379,7 @@
         "days": "T",
         "time_of_day": "12:25PM-01:45PM",
         "duration": 80.0,
-        "location": "MEB 3291",
+        "location": "MEB 3289",
         "type": "Graduate",
         "notes": "-",
         "anticipated_enrollment": 25
