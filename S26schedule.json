@@ -270,7 +270,7 @@
         "time_of_day": "09:10AM-10:30AM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Elective; CLSS",
+        "type": "Elective",
         "notes": "6000-level gradaute course offered at same time.",
         "anticipated_enrollment": 30
     },
@@ -303,7 +303,7 @@
         "time_of_day": "09:10AM-10:30AM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Year 2",
+        "type": "Year 2; CLSS",
         "notes": "",
         "anticipated_enrollment": 45
     },
@@ -325,7 +325,7 @@
         "time_of_day": "02:00PM-03:20PM",
         "duration": 80.0,
         "location": "TBA",
-        "type": "Elective",
+        "type": "Elective; CLSS",
         "notes": "",
         "anticipated_enrollment": 20
     },
@@ -336,7 +336,7 @@
         "time_of_day": "02:00PM-02:50PM",
         "duration": 50.0,
         "location": "TBA",
-        "type": "Elective",
+        "type": "Elective; CLSS",
         "notes": "",
         "anticipated_enrollment": 20
     },
