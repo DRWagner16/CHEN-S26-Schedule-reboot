@@ -244,9 +244,9 @@
     {
         "course_number": "CH EN 5253",
         "instructors": "Wagner",
-        "days": "MWF",
-        "time_of_day": "08:35AM-09:25AM",
-        "duration": 50.0,
+        "days": "MW",
+        "time_of_day": "11:50AM-01:10PM",
+        "duration": 80.0,
         "location": "TBA",
         "type": "Year 4; CLSS",
         "notes": "Moved so students can take Product Design as well.",
