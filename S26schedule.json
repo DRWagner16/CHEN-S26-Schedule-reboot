@@ -111,7 +111,7 @@
     },
     {
         "course_number": "CH EN 3553",
-        "instructors": "Duan; Nigra",
+        "instructors": "Chen",
         "days": "MW",
         "time_of_day": "11:50AM-01:10PM",
         "duration": 80.0,
@@ -305,7 +305,7 @@
         "location": "TBA",
         "type": "Sophomore; CLSS",
         "notes": "Organic Chemistry for Engineers",
-        "anticipated_enrollment": 45
+        "anticipated_enrollment": 75
     },
     {
         "course_number": "CH EN 5960-010",
