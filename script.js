@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (!timeString || !timeString.match(/(\d{1,2}:\d{2}) (AM|PM)/)) {
                         return { ...course, startMinutes: null, endMinutes: null };
                     }
-                    const timeParts = timeString.match(/(\d{1,2}:\d{2})(AM|PM)/);
+                    const timeParts = timeString.match(/(\d{1,2}:\d{2}) (AM|PM)/);
                     const [time, ampm] = [timeParts[1], timeParts[2]];
                     let [hour, minute] = time.split(':').map(Number);
                     if (ampm === 'PM' && hour !== 12) hour += 12;
