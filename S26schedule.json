@@ -23,7 +23,7 @@
     },
     {
         "course_number": "CH EN 1705-Lec-001",
-        "instructors": "Butterfield; Firth; Mohanty",
+        "instructors": "Butterfield; Firth",
         "days": "M",
         "time_of_day": "10:45AM-11:35AM",
         "duration": 50.0,
@@ -100,7 +100,7 @@
     },
     {
         "course_number": "CH EN 3253",
-        "instructors": "Deo; Wagner",
+        "instructors": "Deo; Porter",
         "days": "MWF",
         "time_of_day": "09:40AM-10:30AM",
         "duration": 50.0,
@@ -316,17 +316,6 @@
         "location": "TBA",
         "type": "Elective",
         "notes": "Molecular Simulation - 6000-level gradaute course offered at same time.",
-        "anticipated_enrollment": 20
-    },
-    {
-        "course_number": "CH EN 5960-011",
-        "instructors": "Sant",
-        "days": "TR",
-        "time_of_day": "02:00PM-03:20PM",
-        "duration": 80.0,
-        "location": "TBA",
-        "type": "Elective; CLSS",
-        "notes": "Semiconductor Maunfacturing - 6000-level gradaute course offered at same time.",
         "anticipated_enrollment": 20
     },
     {
