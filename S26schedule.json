@@ -348,7 +348,7 @@
         "duration": 80.0,
         "location": "TBD",
         "type": "Elective",
-        "notes": "",
+        "notes": "Sustainable Engineering",
         "anticipated_enrollment": ""
     },
     {
@@ -357,9 +357,9 @@
         "days": "WF",
         "time_of_day": "02:00 PM-05:00 PM",
         "duration": 180.0,
-        "location": "TBD",
+        "location": "MEB 3520",
         "type": "Elective",
-        "notes": "",
+        "notes": "Bioprocessing",
         "anticipated_enrollment": ""
     },
     {
@@ -370,7 +370,7 @@
         "duration": 50.0,
         "location": "TBD",
         "type": "Elective",
-        "notes": "",
+        "notes": "Molecular Simulations",
         "anticipated_enrollment": ""
     },
     {
@@ -381,7 +381,7 @@
         "duration": 50.0,
         "location": "TBD",
         "type": "Elective",
-        "notes": "",
+        "notes": "Additive Manufacturing",
         "anticipated_enrollment": ""
     },
     {
@@ -392,7 +392,7 @@
         "duration": 50.0,
         "location": "TBD",
         "type": "Year 4",
-        "notes": "",
+        "notes": "Product Design (CH EN 5960-008",
         "anticipated_enrollment": ""
     },
     {
@@ -403,11 +403,11 @@
         "duration": 80.0,
         "location": "TBD",
         "type": "Year 2",
-        "notes": "",
+        "notes": "OChem for Engineers",
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 6208-1",
+        "course_number": "CH EN 5208-1",
         "instructors": "Faroughi",
         "days": "TR",
         "time_of_day": "02:00 PM-03:20 PM",
