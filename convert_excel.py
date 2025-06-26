@@ -46,7 +46,6 @@ def convert_gsheet_to_json():
         print(f"[INFO] Reading data from Google Sheet: '{google_sheet_name}' (Worksheet: '{worksheet_name}')...")
         sheet = client.open(google_sheet_name).worksheet(worksheet_name)
         
-        # --- MODIFIED: This is a more robust way to read the data ---
         print("[INFO] Fetching all values from the worksheet...")
         all_values = sheet.get_all_values()
         
@@ -56,15 +55,17 @@ def convert_gsheet_to_json():
         header = all_values[0]
         data_rows = all_values[1:]
         
+        # --- NEW: This debug line will show us the exact headers Python is reading ---
+        print(f"[DEBUG] Headers found in Google Sheet: {header}")
+        
         print("[INFO] Creating DataFrame from fetched values...")
         df = pd.DataFrame(data_rows, columns=header)
-        # --- END MODIFICATION ---
 
         # Drop any rows where the 'COURSE' column is empty, to clean up blank rows
         df.dropna(subset=['COURSE'], inplace=True)
         df = df[df['COURSE'] != '']
         
-        print("[DEBUG] Successfully loaded and cleaned {len(df.index)} rows.")
+        print(f"[DEBUG] Successfully loaded and cleaned {len(df.index)} rows.")
 
         print("[INFO] Setting course number...")
         df['course_number'] = df['COURSE'].astype(str)
