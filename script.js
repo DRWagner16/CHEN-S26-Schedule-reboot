@@ -66,12 +66,13 @@ document.addEventListener('DOMContentLoaded', () => {
         filterAndRedrawCalendar();
     });
 
+    // --- MODIFIED --- This function now splits by a comma
     function courseToHslColor(course) {
         const typeBaseHues = {
-            'First-year': 210, 'Sophomore': 120, 'Junior': 50,
-            'Senior': 0, 'Elective': 280, 'Graduate': 30, 'Other': 300,
+            'Year 1': 210, 'Year 2': 120, 'Year 3': 50,
+            'Year 4': 0, 'Elective': 280, 'Graduate': 30, 'Other': 300,
         };
-        const primaryType = (course.type || '').split(';')[0].trim();
+        const primaryType = (course.type || '').split(',')[0].trim(); // Changed from ';' to ','
         let baseHue = typeBaseHues[primaryType] ?? 0;
         let saturation = 65;
         if (typeBaseHues[primaryType] === undefined) {
@@ -119,6 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => console.error('[FATAL] Error loading schedule data:', error));
     }
     
+    // --- MODIFIED --- This function now splits by a comma
     function populateFilters(courses) {
         courseColorMap.clear();
         courses.forEach(course => {
@@ -137,7 +139,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 instructorFilter.appendChild(option);
             }
         });
-        const allTypeNames = courses.flatMap(course => (course.type || '').split(';').map(name => name.trim()));
+
+        const allTypeNames = courses.flatMap(course => (course.type || '').split(',').map(name => name.trim())); // Changed from ';' to ','
         const uniqueTypes = [...new Set(allTypeNames)].sort();
         uniqueTypes.forEach(typeName => {
             if (typeName && typeName.toLowerCase() !== 'nan') {
@@ -147,6 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 typeFilter.appendChild(option);
             }
         });
+
         const allLocationNames = courses.flatMap(course => (course.location || '').split(';').map(name => name.trim()));
         const uniqueLocations = [...new Set(allLocationNames)].sort();
         uniqueLocations.forEach(locationName => {
@@ -349,8 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function placeCourseOnCalendar(course, day, width = 100, left = 0) {
         const column = document.querySelector(`.day-content[data-day="${day}"]`);
         if (!column) return;
-    
-        // This is a reference to the single, global tooltip
+        
         const tooltip = document.getElementById('course-tooltip');
         
         const minutesSinceCalendarStart = course.startMinutes - (START_HOUR * 60);
@@ -374,7 +377,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 
         column.appendChild(eventDiv);
         
-        // Mouse events for the floating tooltip
         eventDiv.addEventListener('mouseover', () => {
             tooltip.innerHTML = `
                 <strong>Course:</strong> ${course.course_number}<br>
@@ -394,9 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
             tooltip.innerHTML = ''; 
         });
     
-        // --- THIS IS THE CORRECTED PART ---
         eventDiv.addEventListener('mousemove', (e) => {
-            // Use clientX/clientY which are relative to the viewport (the window)
             tooltip.style.left = e.clientX + 15 + 'px';
             tooltip.style.top = e.clientY + 15 + 'px';
         });
