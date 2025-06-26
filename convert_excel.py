@@ -30,7 +30,7 @@ def convert_gsheet_to_json():
     """
     ########## UPDATE THESE VALUES FOR YOUR SETUP ##########
     google_sheet_name = 'Teaching Assignments 2025-2026' 
-    worksheet_name = 'S26CLSS' 
+    worksheet_name = 'Spring Summary' 
     output_json_file = 'S26schedule.json'
     ########################################################
     
