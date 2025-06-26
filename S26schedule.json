@@ -1,6 +1,6 @@
 [
     {
-        "course_number": "ENGIN 1022",
+        "course_number": "ENGIN 1022-1",
         "instructors": "Firth",
         "days": "T",
         "time_of_day": "12:25 PM-01:45 PM",
@@ -11,7 +11,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "ENGIN 1022",
+        "course_number": "ENGIN 1022-3",
         "instructors": "Firth",
         "days": "R",
         "time_of_day": "12:25 PM-01:45 PM",
@@ -22,7 +22,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "ENGIN 1022",
+        "course_number": "ENGIN 1022-4",
         "instructors": "Firth",
         "days": "F",
         "time_of_day": "11:50 AM-01:10 PM",
@@ -33,7 +33,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "ENGIN 1022",
+        "course_number": "ENGIN 1022-5",
         "instructors": "Firth",
         "days": "F",
         "time_of_day": "01:25 PM-02:45 PM",
@@ -44,7 +44,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "ENGIN 1022",
+        "course_number": "ENGIN 1022-6",
         "instructors": "Firth",
         "days": "F",
         "time_of_day": "03:00 PM-04:20 PM",
@@ -55,7 +55,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 1703",
+        "course_number": "CH EN 1703-1",
         "instructors": "Holmes",
         "days": "TR",
         "time_of_day": "09:10 AM-10:30 AM",
@@ -66,7 +66,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 1703",
+        "course_number": "CH EN 1703-1",
         "instructors": "Holmes",
         "days": "R",
         "time_of_day": "10:45 AM-11:35 AM",
@@ -77,7 +77,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 1705",
+        "course_number": "CH EN 1705-1",
         "instructors": "Butterfield; Firth",
         "days": "M",
         "time_of_day": "10:45 AM-11:35 AM",
@@ -88,7 +88,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 1705",
+        "course_number": "CH EN 1705-2",
         "instructors": "Butterfield; Firth",
         "days": "R",
         "time_of_day": "09:10 AM-12:10 PM",
@@ -99,7 +99,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 1705",
+        "course_number": "CH EN 1705-3",
         "instructors": "Mohanty",
         "days": "F",
         "time_of_day": "09:40 AM-12:40 PM",
@@ -110,7 +110,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 1705",
+        "course_number": "CH EN 1705-4",
         "instructors": "Butterfield; Firth",
         "days": "F",
         "time_of_day": "02:00 PM-05:00 PM",
@@ -121,7 +121,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 2550",
+        "course_number": "CH EN 2550-1",
         "instructors": "Saad",
         "days": "TR",
         "time_of_day": "02:00 PM-03:20 PM",
@@ -132,7 +132,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 2800",
+        "course_number": "CH EN 2800-2",
         "instructors": "Fernandes",
         "days": "MWF",
         "time_of_day": "09:40 AM-10:30 AM",
@@ -143,7 +143,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 2955",
+        "course_number": "CH EN 2955-1",
         "instructors": "Eddings",
         "days": "T",
         "time_of_day": "10:45 AM-11:35 AM",
@@ -154,7 +154,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 3253",
+        "course_number": "CH EN 3253-2",
         "instructors": "Deo; Porter",
         "days": "MWF",
         "time_of_day": "09:40 AM-10:30 AM",
@@ -165,7 +165,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 3553",
+        "course_number": "CH EN 3553-1",
         "instructors": "Chen",
         "days": "MW",
         "time_of_day": "11:50 AM-01:10 PM",
@@ -176,7 +176,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 3603",
+        "course_number": "CH EN 3603-1",
         "instructors": "Gao",
         "days": "MWF",
         "time_of_day": "08:35 AM-09:25 AM",
@@ -187,7 +187,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 3702",
+        "course_number": "CH EN 3702-1",
         "instructors": "McLennan; Kelly",
         "days": "M",
         "time_of_day": "02:00 PM-05:00 PM",
@@ -198,7 +198,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 3702",
+        "course_number": "CH EN 3702-2",
         "instructors": "McLennan; Kelly",
         "days": "T",
         "time_of_day": "02:00 PM-05:00 PM",
@@ -209,18 +209,18 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 4707",
+        "course_number": "CH EN 4707-1",
         "instructors": "Butterfield",
         "days": "W",
-        "time_of_day": "12:55 PM-04:55 PM",
-        "duration": 240.0,
+        "time_of_day": "12:55 PM-01:45 PM",
+        "duration": 50.0,
         "location": "MEB 1292",
         "type": "Year 4",
         "notes": "",
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 4707",
+        "course_number": "CH EN 4707-1",
         "instructors": "Butterfield",
         "days": "W",
         "time_of_day": "02:00 PM-05:00 PM",
@@ -231,18 +231,18 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 4707",
+        "course_number": "CH EN 4707-2",
         "instructors": "Butterfield",
         "days": "R",
-        "time_of_day": "12:55 PM-04:55 PM",
-        "duration": 240.0,
+        "time_of_day": "12:55 PM-01:45 PM",
+        "duration": 50.0,
         "location": "MEB 1292",
         "type": "Year 4",
         "notes": "",
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 4707",
+        "course_number": "CH EN 4707-2",
         "instructors": "Butterfield",
         "days": "R",
         "time_of_day": "02:00 PM-05:00 PM",
@@ -253,7 +253,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 4870",
+        "course_number": "CH EN 4870-1",
         "instructors": "Sieving",
         "days": "W",
         "time_of_day": "04:10 PM-05:00 PM",
@@ -264,7 +264,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 4977",
+        "course_number": "CH EN 4977-1",
         "instructors": "Powell",
         "days": "",
         "time_of_day": "Online/Asynchronous",
@@ -275,7 +275,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 4978",
+        "course_number": "CH EN 4978-1",
         "instructors": "Powell",
         "days": "",
         "time_of_day": "Online/Asynchronous",
@@ -286,7 +286,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 5103",
+        "course_number": "CH EN 5103-1",
         "instructors": "Sant",
         "days": "TR",
         "time_of_day": "10:45 AM-12:05 PM",
@@ -297,7 +297,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 5205",
+        "course_number": "CH EN 5205-1",
         "instructors": "Powell",
         "days": "TR",
         "time_of_day": "07:30 AM-08:50 AM",
@@ -308,7 +308,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 5253",
+        "course_number": "CH EN 5253-1",
         "instructors": "Wagner",
         "days": "MWF",
         "time_of_day": "08:35 AM-09:25 AM",
@@ -319,7 +319,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 6840",
+        "course_number": "CH EN 6840-1",
         "instructors": "Wang",
         "days": "TR",
         "time_of_day": "09:10 AM-10:30 AM",
@@ -330,7 +330,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 5950",
+        "course_number": "CH EN 5950-",
         "instructors": "Eddings",
         "days": "",
         "time_of_day": "Online/Asynchronous",
@@ -341,7 +341,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 3780",
+        "course_number": "CH EN 3780-1",
         "instructors": "Wagner, Firth",
         "days": "TR",
         "time_of_day": "02:00 PM-03:20 PM",
@@ -352,7 +352,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 5960",
+        "course_number": "CH EN 5960-6",
         "instructors": "Skliar; Zangle",
         "days": "WF",
         "time_of_day": "02:00 PM-05:00 PM",
@@ -363,7 +363,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 6960",
+        "course_number": "CH EN 6960-10",
         "instructors": "Hoepfner",
         "days": "MWF",
         "time_of_day": "10:45 AM-11:35 AM",
@@ -374,7 +374,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 5960",
+        "course_number": "CH EN 5960-12",
         "instructors": "Huang",
         "days": "MWF",
         "time_of_day": "03:05 PM-03:55 PM",
@@ -385,7 +385,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 5254",
+        "course_number": "CH EN 5254-8",
         "instructors": "Porter; Skliar",
         "days": "MWF",
         "time_of_day": "08:35 AM-09:25 AM",
@@ -396,7 +396,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 5960",
+        "course_number": "CH EN 5960-",
         "instructors": "Nigra",
         "days": "TR",
         "time_of_day": "09:10 AM-10:30 AM",
@@ -407,7 +407,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 6208",
+        "course_number": "CH EN 6208-1",
         "instructors": "Faroughi",
         "days": "TR",
         "time_of_day": "02:00 PM-03:20 PM",
@@ -418,7 +418,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 6253",
+        "course_number": "CH EN 6253-1",
         "instructors": "Powell",
         "days": "",
         "time_of_day": "Online/Asynchronous",
@@ -429,7 +429,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 6553",
+        "course_number": "CH EN 6553-1",
         "instructors": "Duan",
         "days": "TR",
         "time_of_day": "10:45 AM-12:05 PM",
@@ -440,7 +440,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 6603",
+        "course_number": "CH EN 6603-1",
         "instructors": "Chen; Sutherland",
         "days": "TR",
         "time_of_day": "09:10 AM-10:30 AM",
@@ -451,7 +451,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 6877",
+        "course_number": "CH EN 6877-1",
         "instructors": "Powell",
         "days": "",
         "time_of_day": "Online/Asynchronous",
@@ -462,7 +462,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 6973",
+        "course_number": "CH EN 6973-1",
         "instructors": "Powell",
         "days": "",
         "time_of_day": "Online/Asynchronous",
@@ -473,7 +473,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 6983",
+        "course_number": "CH EN 6983-1",
         "instructors": "Powell",
         "days": "",
         "time_of_day": "Online/Asynchronous",
@@ -484,7 +484,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 7753",
+        "course_number": "CH EN 7753-1",
         "instructors": "Skliar",
         "days": "T",
         "time_of_day": "12:25 PM-01:45 PM",
@@ -495,7 +495,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 7857",
+        "course_number": "CH EN 7857-1",
         "instructors": "McLennan",
         "days": "F",
         "time_of_day": "10:45 AM-11:35 AM",
@@ -506,7 +506,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 7973",
+        "course_number": "CH EN 7973-",
         "instructors": "Powell",
         "days": "",
         "time_of_day": "Online/Asynchronous",
