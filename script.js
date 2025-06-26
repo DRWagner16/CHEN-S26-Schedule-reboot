@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(data => {
                 allCourses = data.map(course => {
                     const timeString = course.time_of_day;
-                    if (!timeString || !timeString.match(/(\d{1,2}:\d{2})(AM|PM)/)) {
+                    if (!timeString || !timeString.match(/(\d{1,2}:\d{2}) (AM|PM)/)) {
                         return { ...course, startMinutes: null, endMinutes: null };
                     }
                     const timeParts = timeString.match(/(\d{1,2}:\d{2})(AM|PM)/);
