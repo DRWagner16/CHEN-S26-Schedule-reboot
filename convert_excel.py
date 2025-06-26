@@ -45,13 +45,26 @@ def convert_gsheet_to_json():
         
         print(f"[INFO] Reading data from Google Sheet: '{google_sheet_name}' (Worksheet: '{worksheet_name}')...")
         sheet = client.open(google_sheet_name).worksheet(worksheet_name)
-        data = sheet.get_all_records()
-        df = pd.DataFrame(data)
+        
+        # --- MODIFIED: This is a more robust way to read the data ---
+        print("[INFO] Fetching all values from the worksheet...")
+        all_values = sheet.get_all_values()
+        
+        if not all_values:
+            raise ValueError("The worksheet is empty.")
 
-        # --- NEW: Debugging step to see what data was actually loaded ---
-        print(f"[DEBUG] Successfully loaded {len(df.index)} rows. First 5 rows of data:")
-        print(df.head().to_string())
-        # --- END DEBUG ---
+        header = all_values[0]
+        data_rows = all_values[1:]
+        
+        print("[INFO] Creating DataFrame from fetched values...")
+        df = pd.DataFrame(data_rows, columns=header)
+        # --- END MODIFICATION ---
+
+        # Drop any rows where the 'COURSE' column is empty, to clean up blank rows
+        df.dropna(subset=['COURSE'], inplace=True)
+        df = df[df['COURSE'] != '']
+        
+        print("[DEBUG] Successfully loaded and cleaned {len(df.index)} rows.")
 
         print("[INFO] Setting course number...")
         df['course_number'] = df['COURSE'].astype(str)
@@ -93,9 +106,7 @@ def convert_gsheet_to_json():
         print(f"\n[SUCCESS] Conversion complete! Data saved to '{output_json_file}'.")
 
     except Exception as e:
-        # --- MODIFIED: Stricter error handling ---
         print(f"[FATAL] An unexpected error occurred: {e}")
-        # Exit with a non-zero code to make the GitHub Action fail correctly
         sys.exit(1)
 
 
