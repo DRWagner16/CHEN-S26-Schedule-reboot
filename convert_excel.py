@@ -46,20 +46,30 @@ def convert_gsheet_to_json():
         print(f"[INFO] Reading data from Google Sheet: '{google_sheet_name}' (Worksheet: '{worksheet_name}')...")
         sheet = client.open(google_sheet_name).worksheet(worksheet_name)
         
-        print("[INFO] Fetching all values from the worksheet...")
+        # --- MODIFIED: This new logic finds the correct header row automatically ---
+        print("[INFO] Fetching all values to locate the header row...")
         all_values = sheet.get_all_values()
         
         if not all_values:
             raise ValueError("The worksheet is empty.")
 
-        header = all_values[0]
-        data_rows = all_values[1:]
+        header_row_index = -1
+        # Find the row index that contains our main table headers
+        for i, row in enumerate(all_values):
+            if "COURSE" in row:
+                header_row_index = i
+                break
         
-        # --- NEW: This debug line will show us the exact headers Python is reading ---
-        print(f"[DEBUG] Headers found in Google Sheet: {header}")
+        if header_row_index == -1:
+            raise ValueError("Could not find the header row containing 'COURSE'. Please ensure the column exists.")
+
+        print(f"[INFO] Found data table starting at row {header_row_index + 1}.")
+        header = all_values[header_row_index]
+        data_rows = all_values[header_row_index + 1:]
         
-        print("[INFO] Creating DataFrame from fetched values...")
+        print(f"[DEBUG] Headers found: {header}")
         df = pd.DataFrame(data_rows, columns=header)
+        # --- END MODIFICATION ---
 
         # Drop any rows where the 'COURSE' column is empty, to clean up blank rows
         df.dropna(subset=['COURSE'], inplace=True)
