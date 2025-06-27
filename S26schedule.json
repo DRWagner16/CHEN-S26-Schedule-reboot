@@ -8,7 +8,7 @@
         "location": "TBD",
         "type": "Other",
         "notes": "",
-        "anticipated_enrollment": ""
+        "anticipated_enrollment": "60"
     },
     {
         "course_number": "ENGIN 1022-3",
@@ -19,7 +19,7 @@
         "location": "MEB 2550",
         "type": "Other",
         "notes": "",
-        "anticipated_enrollment": ""
+        "anticipated_enrollment": "20"
     },
     {
         "course_number": "ENGIN 1022-4",
@@ -30,7 +30,7 @@
         "location": "MEB 2550",
         "type": "Other",
         "notes": "",
-        "anticipated_enrollment": ""
+        "anticipated_enrollment": "20"
     },
     {
         "course_number": "ENGIN 1022-5",
@@ -41,7 +41,7 @@
         "location": "MEB 2550",
         "type": "Other",
         "notes": "",
-        "anticipated_enrollment": ""
+        "anticipated_enrollment": "20"
     },
     {
         "course_number": "ENGIN 1022-6",
@@ -52,7 +52,7 @@
         "location": "MEB 2550",
         "type": "Other",
         "notes": "",
-        "anticipated_enrollment": ""
+        "anticipated_enrollment": "20"
     },
     {
         "course_number": "CH EN 1703-1",
@@ -195,7 +195,7 @@
         "location": "MEB 2550; MEB 3520",
         "type": "Year 3",
         "notes": "",
-        "anticipated_enrollment": ""
+        "anticipated_enrollment": "27"
     },
     {
         "course_number": "CH EN 3702-2",
@@ -206,7 +206,7 @@
         "location": "MEB 2550; MEB 3520",
         "type": "Year 3",
         "notes": "",
-        "anticipated_enrollment": ""
+        "anticipated_enrollment": "27"
     },
     {
         "course_number": "CH EN 4707-1",
@@ -261,7 +261,7 @@
         "location": "CANVAS",
         "type": "Elective",
         "notes": "",
-        "anticipated_enrollment": ""
+        "anticipated_enrollment": "30"
     },
     {
         "course_number": "CH EN 4977-1",
@@ -272,7 +272,7 @@
         "location": "",
         "type": "Other, Elective",
         "notes": "",
-        "anticipated_enrollment": ""
+        "anticipated_enrollment": "30"
     },
     {
         "course_number": "CH EN 4978-1",
@@ -283,7 +283,7 @@
         "location": "",
         "type": "Other, Elective",
         "notes": "",
-        "anticipated_enrollment": ""
+        "anticipated_enrollment": "30"
     },
     {
         "course_number": "CH EN 5103-1",
@@ -481,7 +481,7 @@
         "location": "",
         "type": "Other",
         "notes": "",
-        "anticipated_enrollment": ""
+        "anticipated_enrollment": "10"
     },
     {
         "course_number": "CH EN 6983-1",
@@ -492,7 +492,7 @@
         "location": "",
         "type": "Other",
         "notes": "",
-        "anticipated_enrollment": ""
+        "anticipated_enrollment": "10"
     },
     {
         "course_number": "CH EN 7753-1",
@@ -503,7 +503,7 @@
         "location": "MEB 3289",
         "type": "Graduate",
         "notes": "",
-        "anticipated_enrollment": ""
+        "anticipated_enrollment": "20"
     },
     {
         "course_number": "CH EN 7857-1",
@@ -512,9 +512,9 @@
         "time_of_day": "10:45 AM-11:35 AM",
         "duration": 50.0,
         "location": "TBD",
-        "type": "Graduate, Other",
+        "type": "Graduate",
         "notes": "Move Marc here; John moves off in Fall 2026",
-        "anticipated_enrollment": ""
+        "anticipated_enrollment": "30"
     },
     {
         "course_number": "CH EN 7973-",
