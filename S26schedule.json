@@ -341,7 +341,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 3780-1",
+        "course_number": "CH EN 3780-3",
         "instructors": "Wagner, Firth",
         "days": "TR",
         "time_of_day": "02:00 PM-03:20 PM",
@@ -352,18 +352,29 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 5960-6",
+        "course_number": "CH EN 5960-1",
         "instructors": "Skliar; Zangle",
         "days": "WF",
         "time_of_day": "02:00 PM-05:00 PM",
         "duration": 180.0,
         "location": "MEB 3520",
         "type": "Elective",
-        "notes": "Bioprocessing",
+        "notes": "Bioprocessing MW",
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 6960-10",
+        "course_number": "CH EN 5960-2",
+        "instructors": "Skliar; Zangle",
+        "days": "TR",
+        "time_of_day": "02:00 PM-05:00 PM",
+        "duration": 180.0,
+        "location": "MEB 3520",
+        "type": "Elective",
+        "notes": "Bioprocessing TTh",
+        "anticipated_enrollment": ""
+    },
+    {
+        "course_number": "CH EN 6960-4",
         "instructors": "Hoepfner",
         "days": "MWF",
         "time_of_day": "10:45 AM-11:35 AM",
@@ -374,7 +385,7 @@
         "anticipated_enrollment": ""
     },
     {
-        "course_number": "CH EN 5960-12",
+        "course_number": "CH EN 5960-5",
         "instructors": "Huang",
         "days": "MWF",
         "time_of_day": "03:05 PM-03:55 PM",
